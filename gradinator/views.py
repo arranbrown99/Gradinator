@@ -1,10 +1,13 @@
+from django.contrib.auth import authenticate, login, logout
+from django.http import HttpResponseRedirect, HttpResponse
+from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from rango.models import UserGrade
 from rango.models import User
 from rango.models import Course
-
+from rango.models import Coursework
 
 
 # Create your views here.
@@ -13,8 +16,8 @@ def home(request):
     return render(request, 'gradinator/home.html', context_dict)
 
 
-def signup(request):
-    # taken from tango with django textbook
+def sign_up(request):
+    # Same as rango
     # A boolean value for telling the template
     # whether the registration was successful.
     # Set to False initially. Code changes value to
@@ -67,18 +70,61 @@ def signup(request):
     # Render the template depending on the context.
 
     context_dict = {'user_form': user_form, 'profile_form': profile_form, 'registered': registered}
-    return render(request, 'gradinator/signup.html', context_dict)
+    return render(request, 'gradinator/sign_up.html', context_dict)
 
 
-def login(request):
-    context_dict = {}
-    return render(request, 'gradinator/login.html', context_dict)
+def user_login(request):
+    # same as rango login
+    # If the request is a HTTP POST, try to pull out the relevant information.
+    if request.method == 'POST':
+        # Gather the username and password provided by the user.
+        # This information is obtained from the login form.
+        # We use request.POST.get('<variable>') as opposed
+        # to request.POST['<variable>'], because the
+        # request.POST.get('<variable>') returns None if the
+        # value does not exist, while request.POST['<variable>']
+        # will raise a KeyError exception.
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        # Use Django's machinery to attempt to see if the username/password
+        # combination is valid - a User object is returned if it is.
+        user = authenticate(username=username, password=password)
+        # If we have a User object, the details are correct.
+        # If None (Python's way of representing the absence of a value), no user
+        # with matching credentials was found.
+        if user:
+            # Is the account active? It could have been disabled.
+            if user.is_active:
+                # If the account is valid and active, we can log the user in.
+                # We'll send the user back to the homepage.
+                login(request, user)
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                # An inactive account was used - no logging in!
+                return HttpResponse("Your Rango account is disabled.")
+        else:
+            # Bad login details were provided. So we can't log the user in.
+            print("Invalid login details: {0}, {1}".format(username, password))
+            return HttpResponse("Invalid login details supplied.")
+    # The request is not a HTTP POST, so display the login form.
+    # This scenario would most likely be a HTTP GET.
+    else:
+        # No context variables to pass to the template system, hence the
+        # blank dictionary object...
+        return render(request, 'gradinator/login.html', {})
+
+
+def user_logout(request):
+    # Same as rangos logout
+    # Since we know the user is logged in, we can now just log them out.
+    logout(request)
+    # Take the user back to the homepage.
+    return HttpResponseRedirect(reverse('index'))
 
 
 @login_required
 def account(request):
     # view that shows the current users information
-    context_dict = {}
     username = get_username(request)
     # userInformation contains fields; GUID, Password, picture, email and GPA
     user_information = User.objects.filter(GUID=username)
@@ -111,7 +157,7 @@ def show_course(request, course_name_slug):
         # If we can't, the .get() method raises a DoesNotExist exception.
         course = Course.objects.get(slug=course_name_slug)
         context_dict['category'] = course
-    except course.DoesNotExist:
+    except Course.DoesNotExist:
         # We get here if we didn't find the specified category.
         # Don't do anything -
         # the template will display the "no category" message for us.
@@ -137,7 +183,18 @@ def search(request):
 
 
 def band_calculator(request):
-    context_dict = {}
+    # context dictionary should contain a dictionary that contains all of the courses the user sits
+    # with the associated coursework for that course
+    username = get_username(request)
+    # all courses sat by user
+    # they are course objects not names of courses
+    course_list = UserGrade.objects.filter(SatBy=username)
+    associated_coursework = {}
+    for index_course in course_list:
+        # adds the coursework associated with each users course into  a dictionary
+        associated_coursework[index_course] = Coursework.objects.filter(Course=index_course.ID)
+    # a dictionary with values being dictionaries containing each users courses' coursework
+    context_dict = {'my_courses': associated_coursework}
     return render(request, 'gradinator/band_calculator.html', context_dict)
 
 

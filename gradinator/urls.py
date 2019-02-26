@@ -11,7 +11,12 @@ urlpatterns = [
     url(r'^$', views.band_calculator, name='band_calculator'),
     url(r'^$', views.gpa_calculator, name='gpa_calculator'),
 
-    #matches a course name
+    # matches a course name
     url(r'^course/(?P<course_name_slug>[\w\-]+)/$', views.show_course, name='show_course'),
+
+    # user validation
+    url(r'^sign_up/$', views.sign_up, name='sign_up'),
+    url(r'^login/$', views.user_login, name='login'),
+    url(r'^logout/$', views.user_logout, name='logout'),
 
 ]
