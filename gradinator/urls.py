@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^$', views.contact_us, name='contact_us'),
     url(r'^$', views.account, name='account'),
     url(r'^$', views.my_courses, name='my_courses'),
+    url(r'^$', views.enrol, name='enrol'),
     url(r'^$', views.band_calculator, name='band_calculator'),
     url(r'^$', views.gpa_calculator, name='gpa_calculator'),
 

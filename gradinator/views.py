@@ -4,10 +4,13 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-from rango.models import UserGrade
-from rango.models import User
-from rango.models import Course
-from rango.models import Coursework
+from gradinator.models import UserGrade
+from gradinator.models import User
+from gradinator.models import Course
+from gradinator.models import Coursework
+
+from gradinator.forms import UserForm
+from gradinator.forms import UserProfileForm
 
 
 # Create your views here.
@@ -101,7 +104,7 @@ def user_login(request):
                 return HttpResponseRedirect(reverse('index'))
             else:
                 # An inactive account was used - no logging in!
-                return HttpResponse("Your Rango account is disabled.")
+                return HttpResponse("Your Gradinator account is disabled.")
         else:
             # Bad login details were provided. So we can't log the user in.
             print("Invalid login details: {0}, {1}".format(username, password))
@@ -165,6 +168,25 @@ def show_course(request, course_name_slug):
 
     # Go render the response and return it to the client.
     return render(request, 'gradinator/course.html', context_dict)
+
+
+def enrol(request):
+    # should show all courses where the user has not already enrolled in
+    # ordered by year then by school ie school of computer science [needs discussion]
+    username = get_username(request)
+    users_course_list = UserGrade.objects.filter(SatBy=username)
+
+    # this probably doesnt work
+    # but it should get all courses the user is not currently enrolled in
+    names_users_course = []
+    counter = 0
+    for course in users_course_list:
+        names_users_course[counter] = course.GradeFor
+        counter += 1
+    all_courses = Course.objects.filter(ID not in names_users_course)
+
+    context_dict = {}
+    return render(request, 'gradinator/enrol.html', context_dict)
 
 
 def about_us(request):
