@@ -183,9 +183,9 @@ def enrol(request):
     for course in users_course_list:
         names_users_course[counter] = course.GradeFor
         counter += 1
-    all_courses = Course.objects.filter(ID not in names_users_course)
+    not_enrolled = Course.objects.filter(ID__notin=names_users_course).orderby('')
 
-    context_dict = {}
+    context_dict = {'not_enrolled': not_enrolled}
     return render(request, 'gradinator/enrol.html', context_dict)
 
 
