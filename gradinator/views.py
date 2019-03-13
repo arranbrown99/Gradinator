@@ -1,4 +1,3 @@
-
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
@@ -6,6 +5,8 @@ from gradinator.models import UserGrade
 from gradinator.models import User
 from gradinator.models import Course
 from gradinator.models import Coursework
+
+from rango.webhose_search import run_query
 
 
 # Create your views here.
@@ -81,6 +82,15 @@ def enrol(request):
     not_enrolled = Course.objects.exclude(ID__in=names_users_course)
 
     context_dict = {'not_enrolled': not_enrolled}
+
+    result_list = []
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            # Run our Webhose search function to get the results list!
+            result_list = run_query(query)
+    course_dict = {'result_list': result_list}
+
     return render(request, 'gradinator/enrol.html', context_dict)
 
 
@@ -136,3 +146,5 @@ def get_username(request):
         return username
     else:
         return None
+
+
