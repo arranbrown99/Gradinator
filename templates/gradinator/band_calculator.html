@@ -2,5 +2,7 @@
 {% load staticfiles %}
 {% block title %} Band Calculator {% endblock %}
 {% block body_block %}
-
+	{% for coursework in coursework_grades %}
+		{{coursework.name}}
+	{% endfor %}
 {% endblock %}

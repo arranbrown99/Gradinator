@@ -5,8 +5,9 @@ from gradinator.models import UserGrade
 from gradinator.models import User
 from gradinator.models import Course
 from gradinator.models import Coursework
+from gradinator.models import UserCourseworkGrade
 
-from rango.webhose_search import run_query
+from gradinator.webhose_search import run_query
 
 
 # Create your views here.
@@ -52,11 +53,16 @@ def show_course(request, course_name_slug):
         # Can we find a course name slug with the given name?
         # If we can't, the .get() method raises a DoesNotExist exception.
         course = Course.objects.get(slug=course_name_slug)
-        context_dict['category'] = course
+        context_dict['course'] = course
+
+        # functionality to update the current grade for each coursework associated with the course
+        coursework = Coursework.objects.filter(Course=course.ID)
+        context_dict['coursework'] = coursework
+
     except Course.DoesNotExist:
-        # We get here if we didn't find the specified category.
+        # We get here if we didn't find the specified course.
         # Don't do anything -
-        # the template will display the "no category" message for us.
+        # the template will display the "no course" message for us.
         context_dict['course'] = None
 
     # Go render the response and return it to the client.
@@ -125,7 +131,8 @@ def band_calculator(request):
         # adds the coursework associated with each users course into  a dictionary
         associated_coursework[index_course] = Coursework.objects.filter(Course=index_course.ID)
     # a dictionary with values being dictionaries containing each users courses' coursework
-    context_dict = {'my_courses': associated_coursework}
+    coursework_grades = UserCourseworkGrade.objects.filter(coursework_for__in=associated_coursework)
+    context_dict = {'my_courses': course_list, 'coursework_grades': coursework_grades}
     return render(request, 'gradinator/band_calculator.html', context_dict)
 
 
@@ -146,5 +153,3 @@ def get_username(request):
         return username
     else:
         return None
-
-

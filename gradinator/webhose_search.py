@@ -4,8 +4,6 @@ import urllib.request  # Py3
 
 
 def read_webhose_key():
-
-
     """
     Reads the Webhose API key from a file called 'search.key'.
     Returns either None (no key found), or a string representing the key.
