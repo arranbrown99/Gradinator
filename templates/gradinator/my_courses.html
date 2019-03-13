@@ -2,5 +2,7 @@
 {% load staticfiles %}
 {% block title %} My Courses {% endblock %}
 {% block body_block %}
-
+	{% for course in my_courses %}
+		{{course.name}}
+	{% endfor %}
 {% endblock %}

@@ -3,7 +3,11 @@
 {% block title %} Search {% endblock %}
 {% block body_block %}
 <div>
-	<h1>Search with Rango</h1>
+	{% for course in not_enrolled %}
+		{{course.name}}
+	{% endfor %}
+
+	<h1>Search with Gradinator</h1>
 	<br/>
 	<!-- this is the search functionality -->
 	<form class="form-inline" id="user_form"

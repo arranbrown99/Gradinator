@@ -95,7 +95,7 @@ def enrol(request):
         if query:
             # Run our Webhose search function to get the results list!
             result_list = run_query(query)
-    course_dict = {'result_list': result_list}
+    context_dict['result_list'] = result_list
 
     return render(request, 'gradinator/enrol.html', context_dict)
 
