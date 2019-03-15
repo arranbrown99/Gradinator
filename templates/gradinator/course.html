@@ -1,0 +1,25 @@
+{% extends 'gradinator/base.html' %}
+{% load staticfiles %}
+{% block title %} {{ course.name }} {% endblock %}
+{% block body_block %}
+	{% if category %}
+		<h1>{{ course.name }}</h1>
+		<h1>{{ course.ID }}</h1>
+		<h2>{{ course.school }}</h2>
+		<h2>Taught By - {{ course.taught_by }}</h2>
+		
+		<h2>Description - 
+		{{ course.description }}
+		</h2>
+		<h2>Required Courses - {{ course.required_courses }}</h2>
+		<h2>{{ course.credits }} credits</h2>
+		<h2>{{ course.year }} year</h2>
+
+		{% for coursework in coursework_grades %}
+			{{coursework.name}}
+		{% endfor %}
+
+	{% else %}
+		The specified course does not exist!
+	{% endif %}
+{% endblock %}

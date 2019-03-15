@@ -1,6 +1,7 @@
 {% extends 'gradinator/base.html' %}
 {% load staticfiles %}
-{% block title %} Home {% endblock %}
+{% block title %} Account {% endblock %}
 {% block body_block %}
-
+	{{user.GUID}}
+	{{user.picture}}
 {% endblock %}

@@ -1,10 +1,6 @@
 db.sqlite3
 .idea/
 design/
-<<<<<<< HEAD
-*.pyc
-*.key
-=======
 *.key
 *.pyc
->>>>>>> master
+

@@ -55,7 +55,6 @@ LOGIN_REDIRECT_URL = '/gradinator/'
 # and are trying to access pages requiring authentication
 LOGIN_URL = '/accounts/login/'
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -134,6 +133,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATIC_DIR, ]
 
-#media files
+# media files
 MEDIA_ROOT = MEDIA_DIR
 MEDIA_URL = '/media/'
