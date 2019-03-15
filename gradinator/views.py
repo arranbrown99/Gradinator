@@ -16,6 +16,11 @@ def home(request):
     context_dict = {}
     return render(request, 'gradinator/home.html', context_dict)
 
+@login_required
+def faq(request):
+    context_dict = {}
+    return render(request, 'gradinator/faq.html', context_dict)
+
 #
 # @login_required
 # def account(request):

@@ -6,6 +6,7 @@ urlpatterns = [
     url(r'home/$', views.home, name='home'),
     url(r'about_us/$', views.about_us, name='about_us'),
     url(r'contact_us/$', views.contact_us, name='contact_us'),
+    url(r'faq/$', views.faq, name='faq'),
     # url(r'account/$', views.account, name='account'),
     # url(r'my_courses/$', views.my_courses, name='my_courses'),
     # url(r'enrol/$', views.enrol, name='enrol'),
