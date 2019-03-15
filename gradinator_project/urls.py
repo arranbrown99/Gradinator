@@ -31,6 +31,7 @@ class MyRegistrationView(RegistrationView):
 
 urlpatterns = [
                   url(r'^$', views.home, name='home'),
+                  url(r'gradinator/$', views.home, name='home'),
                   # any further urls that start with gradinator/ will be dealt with by the gradinator app
                   url(r'^gradinator/', include('gradinator.urls')),
                   url(r'^admin/', admin.site.urls),

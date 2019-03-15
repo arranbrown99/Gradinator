@@ -38,16 +38,18 @@
   <div class="collapse navbar-collapse" id="navbar">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="{% url 'home' %}">
-          Home
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{% url 'about_us' %}">
-          About us
-        </a>
+        
       </li>
       {% if user.is_authenticated %}
+      <a class="nav-link" href="{% url 'home' %}">
+        Home
+      </a>
+    </li>
+    <li class="nav-item">
+      
+      <a class="nav-link" href="{% url 'about_us' %}">
+        About us
+      </a>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'auth_logout' %}?next=/gradinator/">
           Logout
