@@ -1,49 +1,7 @@
-<!--
+
 <!DOCTYPE html>
 {% load staticfiles %}
-{% load gradinator_template_tags %}
-<html>
 
-<html>
-<head>
-	<title>
-		Gradinator -
-		{% block title_block %}
-		Calculate your grade
-		{% endblock %}
-	</title>
-</head>
-<body>
-	 Page specific content goes here 
-	<div>
-		{% block body_block %}
-		{% endblock %}
-	</div>
-	<hr />
-	<div>
-		<ul>
-			 You can change this however dont change the urls they are needed for user authentication 
-			{% if user.is_authenticated %}
-				<li><a href="{% url 'auth_logout' %}?next=/gradinator/">Logout</a></li>	
-			{% else %}
-				<li><a href="{% url 'login' %}">Sign In</a></li>
-				<li>o <a href="{% url 'auth_login' %}">Sign Up</a></li>
-			{% endif %}
-			
-		</ul>
-	</div>
-</body>
-</html>
-<<<<<<< HEAD
--->
-
-=======
-
--->
->>>>>>> master
-<!DOCTYPE html>
-{% load staticfiles %}
-{% load rango_template_tags %}
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -76,22 +34,22 @@
     aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" href="{% url 'index' %}">Rango</a>
+  <a class="navbar-brand" href="{% url 'home' %}">Gradinator</a>
   <div class="collapse navbar-collapse" id="navbar">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="{% url 'index' %}">
+        <a class="nav-link" href="{% url 'home' %}">
           Home
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'about' %}">
-          About
+        <a class="nav-link" href="{% url 'about_us' %}">
+          About us
         </a>
       </li>
       {% if user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'auth_logout' %}?next=/rango/">
+        <a class="nav-link" href="{% url 'auth_logout' %}?next=/gradinator/">
           Logout
         </a>
       </li>
@@ -114,7 +72,7 @@
   <div class="row">
     <div class="col-sm-3 col-md-2 sidebar">
       {% block sidebar_block %}
-      {% get_category_list category %}
+      
       {% endblock %}
     </div>
     <div class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 main">
