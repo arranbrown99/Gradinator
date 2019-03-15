@@ -1,13 +1,12 @@
 import os
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tango_with_django_project.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gradinator_project.settings')
 import django
 
 django.setup()
 
 from gradinator.models import Course
 from gradinator.models import Coursework
-
 
 
 def populate():
@@ -17,27 +16,27 @@ def populate():
     # This might seem a little bit confusing, but it allows us to iterate
     # through each data structure, and add the data to our models
 
-    wad_coursework = {
-        "wad_rango": {"name": "rango",
-                      "course": "wad",
-                      "weight": 0.1},
-        "wad_lecture_quiz": {"name": "quiz",
-                             "course": "wad",
-                             "weight": 0.1},
-        "wad_project_application": {"name": "group project application",
-                                    "course": "wad",
-                                    "weight": 0.25},
-        "wad_design": {"name": "group project design specification",
-                       "course": "wad",
-                       "weight": 0.1},
-        "wad_presentation": {"name": "group project presentation",
-                             "course": "wad",
-                             "weight": 0.05},
-        "wad_exam": {"name": "exam",
-                     "course": "wad",
-                     "weight": 0.4}
+    wad_coursework = [
+        {"name": "rango",
+         "course": "wad",
+         "weight": 0.1},
+        {"name": "quiz",
+         "course": "wad",
+         "weight": 0.1},
+        {"name": "group project application",
+         "course": "wad",
+         "weight": 0.25},
+        {"name": "group project design specification",
+         "course": "wad",
+         "weight": 0.1},
+        {"name": "group project presentation",
+         "course": "wad",
+         "weight": 0.05},
+        {"name": "exam",
+         "course": "wad",
+         "weight": 0.4}
 
-    }
+    ]
 
     courses = {"wad": {"name": "Web app development",
                        "ID": "COMPSCI 2021",
@@ -56,14 +55,14 @@ def populate():
     # The code below goes through the course dictionary, then adds each course,
     # and then adds all the associated pages for that category.
     for course, course_data in courses.items():
+        print(course)
         c = add_course(course_data["name"], course_data["ID"], course_data["url"], course_data["taught_by"],
                        course_data["requirements_of_entry"], course_data["credits"], course_data["year"],
                        course_data["school"])
         for cw in course_data["coursework"]:
             add_coursework(c, cw["name"], cw["weight"])
 
-    # Print out the categories we have added.
-
+    # Print out the courses we have added.
     for c in Course.objects.all():
         for cw in Coursework.objects.filter(course=c):
             print("- {0} - {1}".format(str(c), str(cw)))
@@ -71,6 +70,8 @@ def populate():
 
 def add_coursework(course, name, weight):
     cw = Coursework.objects.get_or_create(course=course, title=weight)[0]
+    # this might not work need the model done first
+    cw.course = course.get(ID)
     cw.name = name
     cw.weight = weight
     cw.save()
@@ -90,3 +91,8 @@ def add_course(name, ID, url, taught_by,
     c.school = school
     c.save()
     return c
+
+
+if __name__ == '__main__':
+    print("Starting Gradinator population script...")
+    populate()
