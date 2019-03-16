@@ -1,7 +1,8 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
-
+from django.db import *
+from django.db.models import *
 
 # Create your models here.
 
@@ -23,9 +24,9 @@ class Course(models.Model):
     description = models.TextField(default="")
     required_grades = models.CharField(default="")
     credits = models.IntegerField(max_length=3)
-    year = IntegerField(max_length=1)
-    school = charfield(max_length=30)
-    name = charfield(max_length=30)
+    year = IntegerField(max_length=3)
+    school = CharField(max_length=30)
+    name = CharField(max_length=30)
 
 
 class CourseWork(models.Model):
