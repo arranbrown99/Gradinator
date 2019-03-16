@@ -7,7 +7,7 @@ from gradinator.models import Course
 from gradinator.models import CourseWork
 
 #from rango.webhose_search import run_query
-import rango.webhose_search
+import gradinator.webhose_search
 
 
 # Create your views here.

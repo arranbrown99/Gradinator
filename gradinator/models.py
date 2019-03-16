@@ -15,29 +15,29 @@ class User(models.Model):
     GUID = models.FloatField(max_length=7, unique=True)
     picture = models.ImageField(upload_to='profile_images', blank=True)
     email = models.EmailField(blank=True, unique=True)
-    GPA = models.IntegerField(max_length=3)
+    GPA = models.IntegerField()
 
 
 class Course(models.Model):
     ID = models.CharField(max_length=30, unique=True)
     taught_by = models.CharField(max_length=30)
     description = models.TextField(default="")
-    required_grades = models.CharField(default="")
-    credits = models.IntegerField(max_length=3)
-    year = IntegerField(max_length=3)
+    required_grades = models.CharField(max_length=49, default="")
+    credits = models.IntegerField()
+    year = IntegerField()
     school = CharField(max_length=30)
     name = CharField(max_length=30)
 
 
 class CourseWork(models.Model):
     course = Course.ID
-    weight = IntegerField(max_length=3)
+    weight = IntegerField()
     name = Course.name
 
 
 class UserGrade:
     grade_for = Course.ID
-    grade = IntegerField(3)
+    grade = IntegerField()
     SatBy = User.GUID
 
 
