@@ -9,11 +9,10 @@ from django.db.models import *
 
 class UserProfile(models.Model):
     # This line is required. Links UserProfile to a User model instance.
-    user = models.OneToOneField(User)
+    user = models.OneToOneField(User, primary_key=True)
     # The additional attributes we wish to include.
-    guid = models.FloatField(max_length=7, unique=True, primary_key=True)
-    GPA = models.IntegerField()
-    email = models.EmailField(blank=True, unique=True)
+    GPA = models.IntegerField(default=0)
+    email = models.EmailField(default="")
     picture = models.ImageField(upload_to='profile_images', blank=True)
 
     # Override the __unicode__() method to return out something meaningful!
@@ -23,14 +22,17 @@ class UserProfile(models.Model):
 
 
 class Course(models.Model):
-    id = models.CharField(max_length=30, unique=True, primary_key=True)
+    id = models.CharField(max_length=30, primary_key=True,unique=True)
     taught_by = models.CharField(max_length=30)
-    description = models.TextField(default="")
+    description = models.CharField(max_length=1000, default="")
     requirements_of_entry = models.TextField(default="")
     credits = models.IntegerField(default=0)
     year = models.IntegerField(default=0)
-    school = CharField(max_length=30)
-    name = CharField(max_length=30)
+    school = models.CharField(max_length=30)
+    name = models.CharField(max_length=30)
+    url = models.URLField(max_length=250, default="")
+
+    slug = models.SlugField()
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -46,8 +48,8 @@ class Course(models.Model):
 
 class Coursework(models.Model):
     course = models.ForeignKey(Course, default="")
-    weight = models.IntegerField(default=0)
-    name = models.CharField(max_length=30, default="")
+    weight = models.FloatField(default=0)
+    name = models.CharField(max_length=30, default="",)
 
     class Meta:
         verbose_name_plural = 'Coursework'

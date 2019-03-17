@@ -8,9 +8,6 @@ from gradinator.models import Course
 from gradinator.models import Coursework
 
 
-
-
-
 def populate():
     # First, we will create lists of dictionaries containing the pages
     # we want to add into each category.
@@ -40,8 +37,8 @@ def populate():
 
     ]
 
-    courses = {"wad": {"name": "Web app development",
-                       "ID": "COMPSCI 2021",
+    courses = {"wad": {"name": "wad",
+                       "id": "COMPSCI2021",
                        "url": "https://www.gla.ac.uk/coursecatalogue/course/?code=COMPSCI2021",
                        "taught_by": "David Manlove",
                        "description": "The aim of this course is to provide students with a comprehensive overview of web application development. It will provide students with the skills to design and develop distributed web applications in a disciplined manner, using a range of tools and technologies. It will also strengthen their understanding of the context and rationale of distributed systems. ",
@@ -49,7 +46,8 @@ def populate():
                        "credits": 10,
                        "year": 2,
                        "school": "School of Computing Science",
-                       "coursework": wad_coursework, }, }
+                       "coursework": wad_coursework,
+                       "slug": "wad"}, }
 
     # If you want to add more courses or coursework
     # add them to the dictionaries above
@@ -57,12 +55,12 @@ def populate():
     # The code below goes through the course dictionary, then adds each course,
     # and then adds all the associated pages for that category.
     for course, course_data in courses.items():
-        print(course)
-        c = add_course(course_data["name"], course_data["ID"], course_data["url"], course_data["taught_by"],
+
+        c = add_course(course_data["name"], course_data["id"], course_data["url"], course_data["taught_by"],
+                       course_data["description"],
                        course_data["requirements_of_entry"], course_data["credits"], course_data["year"],
                        course_data["school"])
         for cw in course_data["coursework"]:
-
             add_coursework(c, cw["name"], cw["weight"])
 
     # Print out the courses we have added.
@@ -72,8 +70,7 @@ def populate():
 
 
 def add_coursework(course, name, weight):
-    cw = Coursework.objects.get_or_create(course=course,name=name)[0]
-    # this might not work need the model done first
+    cw = Coursework.objects.get_or_create(course=course, name=name)[0]
     cw.course = course
     cw.name = name
     cw.weight = weight
@@ -81,13 +78,15 @@ def add_coursework(course, name, weight):
     return cw
 
 
-def add_course(name, ID, url, taught_by,
+def add_course(name, id, url, taught_by,description,
                requirements_of_entry, course_credits, year,
                school):
-    c = Course.objects.get_or_create(name=name)[0]
-    c.ID = ID
+    c = Course.objects.get_or_create(id=id)[0]
+    c.name = name
+    c.id = id
     c.url = url
     c.taught_by = taught_by
+    c.description = description
     c.requirements_of_entry = requirements_of_entry
     c.credits = course_credits
     c.year = year

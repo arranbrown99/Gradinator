@@ -1,17 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-
+from django.contrib.auth.models import User
+from django.shortcuts import get_list_or_404, get_object_or_404
 
 from gradinator.models import UserGrade
-from gradinator.models import User
+from gradinator.models import UserProfile
 from gradinator.models import Course
 from gradinator.models import Coursework
 from gradinator.models import UserCourseworkGrade
 
-
 import gradinator.webhose_search
-
-
 
 
 # Create your views here.
@@ -20,21 +18,23 @@ def home(request):
     context_dict = {}
     return render(request, 'gradinator/home.html', context_dict)
 
+
 @login_required
 def faq(request):
     context_dict = {}
     return render(request, 'gradinator/faq.html', context_dict)
 
-#
-# @login_required
-# def account(request):
-#     # view that shows the current users information
-#     username = get_username(request)
-#     # userInformation contains fields; GUID, Password, picture, email and GPA
-#     user_information = User.objects.filter(GUID=username)
-#     context_dict = {'user': user_information}
-#
-#     return render(request, 'gradinator/account.html', context_dict)
+
+@login_required
+def account(request):
+    # view that shows the current users information
+    create_user_profile()
+    # userInformation contains fields; picture, email and GPA
+    user = UserProfile.objects.get(user=request.user)
+
+    context_dict = {'user': user}
+
+    return render(request, 'gradinator/account.html', context_dict)
 
 
 # @login_required
@@ -55,27 +55,29 @@ def faq(request):
 #     return render(request, 'gradinator/my_courses.html', context_dict)
 
 
-# @login_required
-# def show_course(request, course_name_slug):
-#     context_dict = {}
-#     try:
-#         # Can we find a course name slug with the given name?
-#         # If we can't, the .get() method raises a DoesNotExist exception.
-#         course = Course.objects.get(slug=course_name_slug)
-#         context_dict['course'] = course
-#
-#         # functionality to update the current grade for each coursework associated with the course
-#         coursework = Coursework.objects.filter(Course=course.ID)
-#         context_dict['coursework'] = coursework
-#
-#     except Course.DoesNotExist:
-#         # We get here if we didn't find the specified course.
-#         # Don't do anything -
-#         # the template will display the "no course" message for us.
-#         context_dict['course'] = None
-#
-#     # Go render the response and return it to the client.
-#     return render(request, 'gradinator/course.html', context_dict)
+@login_required
+def show_course(request, course_name_slug):
+    context_dict = {}
+    try:
+        # Can we find a course name slug with the given name?
+        # If we can't, the .get() method raises a DoesNotExist exception.
+        course = get_object_or_404(Course, slug=course_name_slug)
+        # course = Course.objects.get(slug=course_name_slug)
+        context_dict['course'] = course
+
+        # functionality to update the current grade for each coursework associated with the course
+        coursework = Coursework.objects.filter(course=course)
+        context_dict['coursework'] = coursework
+
+    except Course.DoesNotExist:
+        # We get here if we didn't find the specified course.
+        # Don't do anything -
+        # the template will display the "no course" message for us.
+        context_dict['course'] = None
+
+    # Go render the response and return it to the client.
+    return render(request, 'gradinator/course.html', context_dict)
+
 
 #
 # @login_required
@@ -126,6 +128,7 @@ def search(request):
     context_dict = {}
     return render(request, 'gradinator/search.html', context_dict)
 
+
 #
 # @login_required
 # def band_calculator(request):
@@ -162,3 +165,9 @@ def get_username(request):
         return username
     else:
         return None
+
+
+def create_user_profile():
+    # helper function that creates the user profile objects
+    for user in User.objects.all():
+        UserProfile.objects.get_or_create(user=user)
