@@ -19,7 +19,7 @@ class User(models.Model):
 
 
 class Course(models.Model):
-    ID = models.CharField(max_length=30, unique=True)
+    courseID = models.CharField(max_length=30, unique=True)
     taught_by = models.CharField(max_length=30)
     description = models.TextField(default="")
     required_grades = models.CharField(max_length=49, default="")
@@ -30,13 +30,13 @@ class Course(models.Model):
 
 
 class CourseWork(models.Model):
-    course = Course.ID
+    course = Course.courseID
     weight = IntegerField()
     name = Course.name
 
 
 class UserGrade:
-    grade_for = Course.ID
+    grade_for = Course.courseID
     grade = IntegerField()
     SatBy = User.GUID
 
