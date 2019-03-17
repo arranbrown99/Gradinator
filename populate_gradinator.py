@@ -4,9 +4,11 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gradinator_project.settings')
 import django
 
 django.setup()
-
 from gradinator.models import Course
 from gradinator.models import Coursework
+
+
+
 
 
 def populate():
@@ -60,6 +62,7 @@ def populate():
                        course_data["requirements_of_entry"], course_data["credits"], course_data["year"],
                        course_data["school"])
         for cw in course_data["coursework"]:
+
             add_coursework(c, cw["name"], cw["weight"])
 
     # Print out the courses we have added.
@@ -69,9 +72,9 @@ def populate():
 
 
 def add_coursework(course, name, weight):
-    cw = Coursework.objects.get_or_create(course=course, title=weight)[0]
+    cw = Coursework.objects.get_or_create(course=course,name=name)[0]
     # this might not work need the model done first
-    cw.course = course.get(ID)
+    cw.course = course
     cw.name = name
     cw.weight = weight
     cw.save()
@@ -79,14 +82,14 @@ def add_coursework(course, name, weight):
 
 
 def add_course(name, ID, url, taught_by,
-               requirements_of_entry, credits, year,
+               requirements_of_entry, course_credits, year,
                school):
     c = Course.objects.get_or_create(name=name)[0]
     c.ID = ID
     c.url = url
     c.taught_by = taught_by
     c.requirements_of_entry = requirements_of_entry
-    c.credits = credits
+    c.credits = course_credits
     c.year = year
     c.school = school
     c.save()

@@ -1,50 +1,81 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
-from django.db import *
 from django.db.models import *
+
 
 # Create your models here.
 
-# use this to order courses by each field so school then year probably
-# class Meta:
-#    ordering = ['', '', '']
 
-
-class User(models.Model):
-    GUID = models.FloatField(max_length=7, unique=True)
-    picture = models.ImageField(upload_to='profile_images', blank=True)
+class UserProfile(models.Model):
+    # This line is required. Links UserProfile to a User model instance.
+    user = models.OneToOneField(User)
+    # The additional attributes we wish to include.
+    guid = models.FloatField(max_length=7, unique=True, primary_key=True)
+    GPA = models.IntegerField()
     email = models.EmailField(blank=True, unique=True)
-    GPA = models.IntegerField(max_length=3)
+    picture = models.ImageField(upload_to='profile_images', blank=True)
+
+    # Override the __unicode__() method to return out something meaningful!
+    # Remember if you use Python 2.7.x, define __unicode__ too!
+    def __str__(self):
+        return self.user.username
 
 
 class Course(models.Model):
-    ID = models.CharField(max_length=30, unique=True)
+    id = models.CharField(max_length=30, unique=True, primary_key=True)
     taught_by = models.CharField(max_length=30)
     description = models.TextField(default="")
-    required_grades = models.CharField(default="")
-    credits = models.IntegerField(max_length=3)
-    year = IntegerField(max_length=3)
+    requirements_of_entry = models.TextField(default="")
+    credits = models.IntegerField(default=0)
+    year = models.IntegerField(default=0)
     school = CharField(max_length=30)
     name = CharField(max_length=30)
 
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Course, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+    # use this to order courses by each field so school then year then name
+    class Meta:
+        ordering = ['school', 'year', 'name']
+
 
 class Coursework(models.Model):
-    course = Course.ID
-    weight = IntegerField(max_length=3)
-    name = Course.name
+    course = models.ForeignKey(Course, default="")
+    weight = models.IntegerField(default=0)
+    name = models.CharField(max_length=30, default="")
+
+    class Meta:
+        verbose_name_plural = 'Coursework'
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super(Coursework, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
 
 
-class UserGrade:
-    grade_for = Course.ID
+class UserGrade(models.Model):
+    # weak entity
+    grade_for = models.ForeignKey(Course)
+    sat_by = models.ForeignKey(UserProfile)
+
     grade = IntegerField(3)
-    SatBy = User.GUID
+
+    class Meta:
+        unique_together = ('grade_for', 'sat_by')
 
 
-class UserCourseworkGrade:
-    grade_for = Coursework.name
-    user = User.GUID
+class UserCourseworkGrade(models.Model):
+    grade_for = models.ForeignKey(Coursework)
+    sat_by = models.ForeignKey(UserProfile)
+
     grade = FloatField(max_length=3)
 
-
-
+    class Meta:
+        unique_together = ('grade_for', 'sat_by')
