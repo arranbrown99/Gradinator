@@ -1,13 +1,17 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
-# from gradinator.models import UserGrade
-# from gradinator.models import User
-# from gradinator.models import Course
-# from gradinator.models import Coursework
-# from gradinator.models import UserCourseworkGrade
 
-from gradinator.webhose_search import run_query
+from gradinator.models import UserGrade
+from gradinator.models import User
+from gradinator.models import Course
+from gradinator.models import Coursework
+from gradinator.models import UserCourseworkGrade
+
+
+import gradinator.webhose_search
+
+
 
 
 # Create your views here.
