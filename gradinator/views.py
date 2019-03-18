@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import HttpResponse
 
@@ -155,23 +155,33 @@ def search(request):
     return render(request, 'gradinator/search.html', context_dict)
 
 
-#
-# @login_required
-# def band_calculator(request):
-#     # context dictionary should contain a dictionary that contains all of the courses the user sits
-#     # with the associated coursework for that course
-#     username = get_username(request)
-#     # all courses sat by user
-#     # they are course objects not names of courses
-#     course_list = UserGrade.objects.filter(SatBy=username)
-#     associated_coursework = {}
-#     for index_course in course_list:
-#         # adds the coursework associated with each users course into  a dictionary
-#         associated_coursework[index_course] = Coursework.objects.filter(Course=index_course.ID)
-#     # a dictionary with values being dictionaries containing each users courses' coursework
-#     coursework_grades = UserCourseworkGrade.objects.filter(coursework_for__in=associated_coursework)
-#     context_dict = {'my_courses': course_list, 'coursework_grades': coursework_grades}
-#     return render(request, 'gradinator/band_calculator.html', context_dict)
+@login_required
+def band_calculator(request):
+    # context dictionary should contain a dictionary that contains all of the courses the user sits
+    # with the associated coursework for that course
+    username = get_username(request)
+
+    # a list of objects that are the courses the current user
+    # is enrolled in and their grade
+    users_grades = UserGrade.objects.filter(sat_by=username)
+
+    # all courses sat by user
+    # they are course objects not names of courses
+    course_list = []
+    for grade in users_grades:
+        course_list.append(grade.grade_for)
+
+    associated_coursework = []
+    for index_course in course_list:
+        # adds the coursework associated with each users course into  a dictionary
+        associated_coursework.append((index_course, Coursework.objects.filter(course=index_course)))
+    # a dictionary with values being dictionaries containing each users courses' coursework
+    #coursework_grades = UserCourseworkGrade.objects.filter(coursework_for__in=associated_coursework)
+    
+    context_dict = {'my_courses': course_list, 'coursework_grades': associated_coursework}
+    return render(request, 'gradinator/band_calculator.html', context_dict)
+
+
 #
 #
 # @login_required

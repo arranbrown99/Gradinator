@@ -2,7 +2,15 @@
 {% load staticfiles %}
 {% block title %} Band Calculator {% endblock %}
 {% block body_block %}
-	{% for coursework in coursework_grades %}
-		{{coursework.name}}
+	{% for tuple in coursework_grades %}
+		{{tuple.0.name}} 
+		<ul>
+      	
+		{% for coursework in tuple.1 %}
+		<li>
+			{{coursework.name}}
+		</li>
+		{% endfor %}
+	</ul>
 	{% endfor %}
 {% endblock %}
