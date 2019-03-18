@@ -1,7 +1,36 @@
 {% extends 'gradinator/base.html' %}
 {% load staticfiles %}
-{% block title %} Account {% endblock %}
+{% block title %}{{ selecteduser.username }} Account{% endblock %}
+
 {% block body_block %}
-	{{user.GUID}}
-	{{user.picture}}
+<h1>{{selecteduser.username}} Account</h1>
+{% ifequal object.image None %}
+<img src="{{ MEDIA_URL }}blank.png" 
+width="300"
+height="300"alt="default"/>
+{% else %}
+<img src="{{ MEDIA_URL }}{{userprofile.picture }}"
+width="300"
+height="300"
+alt="{{selecteduser.username}}" />
+{% endifequal %}
+
+
+<br/>
+<div>
+	{% if selecteduser.username == user.username %}
+
+	<form method="post" action="." enctype="multipart/form-data">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="Update" />
+	</form>
+
+	{% else %}
+	<p><strong>Email:</strong> <a href="{{userprofile.email}}">
+	{{userprofile.email}}</a></p>
+	{% endif %}
+</div>
+<div id="edit_account"></div>
+
 {% endblock %}

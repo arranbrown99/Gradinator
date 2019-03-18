@@ -1,4 +1,4 @@
-to run the website do the following in the command line assuming the virtual enviroment is set up
+to run the website do the following in the command line commands assuming the virtual enviroment is set up
 
 pip install -U django-registration-redux==1.4
 

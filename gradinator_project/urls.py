@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.conf.urls import include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.shortcuts import reverse
 
 from gradinator import views
 
@@ -26,7 +27,7 @@ from registration.backends.simple.views import RegistrationView
 
 class MyRegistrationView(RegistrationView):
     def get_success_url(self, user):
-        return '/gradinator/'
+        return reverse('register_profile')
 
 
 urlpatterns = [
