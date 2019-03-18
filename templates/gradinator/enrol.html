@@ -8,10 +8,12 @@
 
 	<p>All the courses you are not already enrolled in</p>
 	{% for course in not_enrolled %}
-	<strong id="added"></strong> 
-	<button id="enrol-btn" data-catid="{{category.id}}" class="btn btn-primary" type="button">
-		{{course.name}}
-	</button>
+
+	<form  id="enrol_btn" method="post" action="/gradinator/enrol/{{course.slug}}/" data-courseid="{{course.id}}" enctype="multipart/form-data">
+		{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="{{course.name}}" />
+	</form>
 
 	{% endfor %}
 

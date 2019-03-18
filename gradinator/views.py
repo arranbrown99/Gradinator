@@ -12,6 +12,7 @@ from gradinator.models import Coursework
 from gradinator.models import UserCourseworkGrade
 
 from gradinator.forms import UserProfileForm
+from gradinator.forms import UserGradeForm
 
 from gradinator.webhose_search import run_query
 
@@ -93,7 +94,7 @@ def show_course(request, course_name_slug):
 
 
 @login_required
-def enrol(request):
+def enrol(request, course_name_slug=""):
     # should show all courses where the user has not already enrolled in
     # ordered by year then by school ie school of computer science [needs discussion]
     # then lets users add courses to their account
@@ -111,6 +112,22 @@ def enrol(request):
     not_enrolled = Course.objects.exclude(id__in=names_users_course)
 
     context_dict = {'not_enrolled': not_enrolled}
+
+    form = UserGrade()
+    if request.method == 'POST':
+        form = UserGradeForm(request.POST, request.FILES)
+        course = Course.objects.get(slug=course_name_slug)
+        if form.is_valid() and course:
+            user_grade = form.save(commit=False)
+            user_grade.sat_by = UserProfile.objects.get(user=request.user)
+            user_grade.grade_for = course
+            user_grade.save()
+            return HttpResponse()
+        else:
+            print(form.errors)
+            if course is None:
+                print(course)
+    context_dict['form'] = form
 
     # result_list = []
     # if request.method == 'POST':
@@ -199,20 +216,3 @@ def register_profile(request):
             print(form.errors)
     context_dict = {'form': form}
     return render(request, 'gradinator/profile_registration.html', context_dict)
-
-
-@login_required
-def enrol_to_course(request):
-    # adds a course to a user
-    course_id = None
-    if request.method == 'GET':
-        course_id = request.GET['course_id']
-    added = False
-    if course_id:
-        course = Course.objects.get(id=course_id)
-
-        if course:
-            user_grade = UserGrade.objects.get_or_create(grade_for=course)
-            user_grade.save()
-            added = True
-    return HttpResponse(added)

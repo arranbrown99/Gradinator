@@ -1,8 +1,18 @@
-$('#enrol-btn').click(function(){
-	var courseid;
-	courseid = $(this).attr("data-catid");
-	$.get('/gradinator/enrol_to_course/', {course_id: courseid}, function(data){
-		$('#added').html(data);
-		$('#enrol-btn').hide();
-	});
+var frm = $('#enrol_btn');
+frm.submit(function () {
+	courseid = $(this).attr("data-courseid");
+	$('#enrol_btn').hide();
+	$.ajax({
+		type: frm.attr('method'),
+		url: frm.attr('action'),
+		data: frm.serialize(),
+		success: function (data) {
+			$("#added").html(data);
+		},
+		error: function(data) {
+			$("#added").html("Something went wrong!");
+		}
+	}
+	);
+	return false;
 });

@@ -67,7 +67,7 @@ class UserGrade(models.Model):
     grade_for = models.ForeignKey(Course)
     sat_by = models.ForeignKey(UserProfile)
 
-    grade = IntegerField(3)
+    grade = models.IntegerField(default=0)
 
     class Meta:
         unique_together = ('grade_for', 'sat_by')
