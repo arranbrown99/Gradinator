@@ -2,6 +2,13 @@
 {% load staticfiles %}
 {% block title %} My Courses {% endblock %}
 {% block body_block %}
+	{% if not_enrolled %}
+		<p>All the courses you have already enrolled in.</p>
+	{% else %}
+		<p>You have not enrolled to any course. Head on over to enrol.</p>
+	{% endif %}
+
+
 	{% for course in my_courses %}
 		{{course.name}}
 	{% endfor %}

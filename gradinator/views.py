@@ -98,19 +98,17 @@ def enrol(request, course_name_slug=""):
     # should show all courses where the user has not already enrolled in
     # ordered by year then by school ie school of computer science [needs discussion]
     # then lets users add courses to their account
-    username = get_username(request)
-    users_course_list = UserGrade.objects.filter(sat_by=username)
+    user = UserProfile.objects.get(user=request.user)
+    users_course_list = UserGrade.objects.filter(sat_by=user)
 
-    # should get all courses the user is not currently enrolled in
-    names_users_course = []
-    counter = 0
-    for course in users_course_list:
-        names_users_course[counter] = course.GradeFor
-        counter += 1
+    all_courses = Course.objects.filter()
+    to_exclude = []
+    for any_course in all_courses:
+        for user_course in users_course_list:
+            if any_course == user_course.grade_for:
+                to_exclude.append(any_course.id)
 
-    # still needs to be ordered
-    not_enrolled = Course.objects.exclude(id__in=names_users_course)
-
+    not_enrolled = Course.objects.exclude(id__in=to_exclude)
     context_dict = {'not_enrolled': not_enrolled}
 
     form = UserGrade()
@@ -128,7 +126,7 @@ def enrol(request, course_name_slug=""):
             if course is None:
                 print(course)
     context_dict['form'] = form
-
+    # functionality to search for a course not tested yet
     # result_list = []
     # if request.method == 'POST':
     #     query = request.POST['query'].strip()
