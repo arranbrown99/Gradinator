@@ -47,10 +47,20 @@
 
       </li>
       {% if user.is_authenticated %}
-      <a class="nav-link" href="{% url 'home' %}">
-        Search Courses
+      
+
+      <a class="nav-link" href="{% url 'account' user.username %}">
+        Account
       </a>
     </li>
+    <li class="nav-item">
+
+      <a class="nav-link" href="{% url 'my_courses' %}">
+        My Courses
+      </a>
+      
+      </li>
+
     <li class="nav-item">
 
       <a class="nav-link" href="{% url 'home' %}">
@@ -69,7 +79,7 @@
 
       <li class="nav-item">
 
-      <a class="nav-link" href="{% url 'home' %}">
+      <a class="nav-link" href="{% url 'enrol' %}">
         Enrol
       </a>
       

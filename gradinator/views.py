@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import get_list_or_404, get_object_or_404
+from django.shortcuts import redirect
 
 from gradinator.models import UserGrade
 from gradinator.models import UserProfile
@@ -9,7 +10,9 @@ from gradinator.models import Course
 from gradinator.models import Coursework
 from gradinator.models import UserCourseworkGrade
 
-import gradinator.webhose_search
+from gradinator.forms import UserProfileForm
+
+from gradinator.webhose_search import run_query
 
 
 # Create your views here.
@@ -26,33 +29,42 @@ def faq(request):
 
 
 @login_required
-def account(request):
-    # view that shows the current users information
-    create_user_profile()
-    # userInformation contains fields; picture, email and GPA
-    user = UserProfile.objects.get(user=request.user)
+def account(request, username):
+    try:
+        user = User.objects.get(username=username)
 
-    context_dict = {'user': user}
+    except User.DoesNotExist:
+        return redirect('index')
+    userprofile = UserProfile.objects.get_or_create(user=user)[0]
+    form = UserProfileForm(
+        {'email': userprofile.email, 'picture': userprofile.picture})
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES, instance=userprofile)
+        if form.is_valid():
+            form.save(commit=True)
+            return redirect('account', user.username)
+        else:
+            print(form.errors)
+    return render(request, 'gradinator/account.html',
+                  {'userprofile': userprofile, 'selecteduser': user, 'form': form})
 
-    return render(request, 'gradinator/account.html', context_dict)
 
-
-# @login_required
-# def my_courses(request):
-#     # a view that shows all courses that the current user has enrolled in
-#     username = get_username(request)
-#     # if user is logged in
-#     if username is not None:
-#         # a list of objects that are the courses the current user
-#         # is enrolled in and their grade
-#         course_list = UserGrade.objects.filter(SatBy=username)
-#         context_dict = {'my_courses': course_list}
-#     else:
-#         # if not logged in no courses
-#         # might need to change this
-#         course_list = None
-#         context_dict = {'my_courses': course_list}
-#     return render(request, 'gradinator/my_courses.html', context_dict)
+@login_required
+def my_courses(request):
+    #     # a view that shows all courses that the current user has enrolled in
+    #     username = get_username(request)
+    #     # if user is logged in
+    #     if username is not None:
+    #         # a list of objects that are the courses the current user
+    #         # is enrolled in and their grade
+    #         course_list = UserGrade.objects.filter(SatBy=username)
+    #         context_dict = {'my_courses': course_list}
+    #     else:
+    #         # if not logged in no courses
+    #         # might need to change this
+    #         course_list = None
+    #         context_dict = {'my_courses': course_list}
+    return render(request, 'gradinator/my_courses.html', {})
 
 
 @login_required
@@ -79,36 +91,35 @@ def show_course(request, course_name_slug):
     return render(request, 'gradinator/course.html', context_dict)
 
 
-#
-# @login_required
-# def enrol(request):
-#     # should show all courses where the user has not already enrolled in
-#     # ordered by year then by school ie school of computer science [needs discussion]
-#     # then lets users add courses to their account
-#     username = get_username(request)
-#     users_course_list = UserGrade.objects.filter(SatBy=username)
-#
-#     # should get all courses the user is not currently enrolled in
-#     names_users_course = []
-#     counter = 0
-#     for course in users_course_list:
-#         names_users_course[counter] = course.GradeFor
-#         counter += 1
-#
-#     # still needs to be ordered
-#     not_enrolled = Course.objects.exclude(ID__in=names_users_course)
-#
-#     context_dict = {'not_enrolled': not_enrolled}
-#
-#     result_list = []
-#     if request.method == 'POST':
-#         query = request.POST['query'].strip()
-#         if query:
-#             # Run our Webhose search function to get the results list!
-#             result_list = run_query(query)
-#     context_dict['result_list'] = result_list
-#
-#     return render(request, 'gradinator/enrol.html', context_dict)
+@login_required
+def enrol(request):
+    # should show all courses where the user has not already enrolled in
+    # ordered by year then by school ie school of computer science [needs discussion]
+    # then lets users add courses to their account
+    username = get_username(request)
+    users_course_list = UserGrade.objects.filter(sat_by=username)
+
+    # should get all courses the user is not currently enrolled in
+    names_users_course = []
+    counter = 0
+    for course in users_course_list:
+        names_users_course[counter] = course.GradeFor
+        counter += 1
+
+    # still needs to be ordered
+    not_enrolled = Course.objects.exclude(id__in=names_users_course)
+
+    context_dict = {'not_enrolled': not_enrolled}
+
+    # result_list = []
+    # if request.method == 'POST':
+    #     query = request.POST['query'].strip()
+    #     if query:
+    #         # Run our Webhose search function to get the results list!
+    #         result_list = run_query(query)
+    # context_dict['result_list'] = result_list
+
+    return render(request, 'gradinator/enrol.html', context_dict)
 
 
 @login_required
@@ -171,3 +182,19 @@ def create_user_profile():
     # helper function that creates the user profile objects
     for user in User.objects.all():
         UserProfile.objects.get_or_create(user=user)
+
+
+@login_required
+def register_profile(request):
+    form = UserProfileForm()
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_profile = form.save(commit=False)
+            user_profile.user = request.user
+            user_profile.save()
+            return redirect('index')
+        else:
+            print(form.errors)
+    context_dict = {'form': form}
+    return render(request, 'gradinator/profile_registration.html', context_dict)

@@ -12,7 +12,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     # The additional attributes we wish to include.
     GPA = models.IntegerField(default=0)
-    email = models.EmailField(default="")
+    email = models.EmailField(default="", blank=True)
     picture = models.ImageField(upload_to='profile_images', blank=True)
 
     # Override the __unicode__() method to return out something meaningful!
@@ -22,7 +22,7 @@ class UserProfile(models.Model):
 
 
 class Course(models.Model):
-    id = models.CharField(max_length=30, primary_key=True,unique=True)
+    id = models.CharField(max_length=30, primary_key=True, unique=True)
     taught_by = models.CharField(max_length=30)
     description = models.CharField(max_length=1000, default="")
     requirements_of_entry = models.TextField(default="")
@@ -49,7 +49,7 @@ class Course(models.Model):
 class Coursework(models.Model):
     course = models.ForeignKey(Course, default="")
     weight = models.FloatField(default=0)
-    name = models.CharField(max_length=30, default="",)
+    name = models.CharField(max_length=30, default="", )
 
     class Meta:
         verbose_name_plural = 'Coursework'
