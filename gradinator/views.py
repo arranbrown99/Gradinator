@@ -53,20 +53,19 @@ def account(request, username):
 
 @login_required
 def my_courses(request):
-    #     # a view that shows all courses that the current user has enrolled in
-    #     username = get_username(request)
-    #     # if user is logged in
-    #     if username is not None:
-    #         # a list of objects that are the courses the current user
-    #         # is enrolled in and their grade
-    #         course_list = UserGrade.objects.filter(SatBy=username)
-    #         context_dict = {'my_courses': course_list}
-    #     else:
-    #         # if not logged in no courses
-    #         # might need to change this
-    #         course_list = None
-    #         context_dict = {'my_courses': course_list}
-    return render(request, 'gradinator/my_courses.html', {})
+    # a view that shows all courses that the current user has enrolled in
+    username = get_username(request)
+    # a list of objects that are the courses the current user
+    # is enrolled in and their grade
+    users_grades = UserGrade.objects.filter(sat_by=username)
+
+    course_list = []
+    for grade in users_grades:
+        course_list.append(grade.grade_for)
+
+    context_dict = {'my_courses': course_list}
+
+    return render(request, 'gradinator/my_courses.html', context_dict)
 
 
 @login_required
@@ -98,7 +97,7 @@ def enrol(request, course_name_slug=""):
     # should show all courses where the user has not already enrolled in
     # ordered by year then by school ie school of computer science [needs discussion]
     # then lets users add courses to their account
-    user = UserProfile.objects.get(user=request.user)
+    user = get_username(request)
     users_course_list = UserGrade.objects.filter(sat_by=user)
 
     all_courses = Course.objects.filter()
@@ -187,11 +186,8 @@ def search(request):
 
 def get_username(request):
     # helper function that gets the username if the user is logged in
-    if request.user.is_authenticated():
-        username = request.user.username
-        return username
-    else:
-        return None
+    user = UserProfile.objects.get(user=request.user)
+    return user
 
 
 def create_user_profile():
