@@ -8,10 +8,14 @@
 
 	<p>All the courses you are not already enrolled in</p>
 	{% for course in not_enrolled %}
+	<strong id="added"></strong> 
+	<button id="enrol-btn" data-catid="{{category.id}}" class="btn btn-primary" type="button">
 		{{course.name}}
+	</button>
+
 	{% endfor %}
 
-	
-	
+
+
 </div>
 {% endblock %}

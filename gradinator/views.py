@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import get_list_or_404, get_object_or_404
 from django.shortcuts import redirect
+from django.shortcuts import HttpResponse
 
 from gradinator.models import UserGrade
 from gradinator.models import UserProfile
@@ -198,3 +199,20 @@ def register_profile(request):
             print(form.errors)
     context_dict = {'form': form}
     return render(request, 'gradinator/profile_registration.html', context_dict)
+
+
+@login_required
+def enrol_to_course(request):
+    # adds a course to a user
+    course_id = None
+    if request.method == 'GET':
+        course_id = request.GET['course_id']
+    added = False
+    if course_id:
+        course = Course.objects.get(id=course_id)
+
+        if course:
+            user_grade = UserGrade.objects.get_or_create(grade_for=course)
+            user_grade.save()
+            added = True
+    return HttpResponse(added)

@@ -4,15 +4,22 @@
 
 {% block body_block %}
 <h1>{{selecteduser.username}} Account</h1>
-
+{% ifequal object.image None %}
+<img src="{{ MEDIA_URL }}blank.png" 
+width="300"
+height="300"alt="default"/>
+{% else %}
 <img src="{{ MEDIA_URL }}{{userprofile.picture }}"
 width="300"
 height="300"
 alt="{{selecteduser.username}}" />
+{% endifequal %}
+
+
 <br/>
 <div>
 	{% if selecteduser.username == user.username %}
-	
+
 	<form method="post" action="." enctype="multipart/form-data">
 		{% csrf_token %}
 		{{ form.as_p }}
