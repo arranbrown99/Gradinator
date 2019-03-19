@@ -177,9 +177,50 @@ def band_calculator(request):
         # adds the coursework associated with each users course into  a dictionary
         associated_coursework.append((index_course, Coursework.objects.filter(course=index_course)))
     # a dictionary with values being dictionaries containing each users courses' coursework
-    #coursework_grades = UserCourseworkGrade.objects.filter(coursework_for__in=associated_coursework)
-    
+    # coursework_grades = UserCourseworkGrade.objects.filter(coursework_for__in=associated_coursework)
+
     context_dict = {'my_courses': course_list, 'coursework_grades': associated_coursework}
+    return render(request, 'gradinator/band_calculator.html', context_dict)
+
+
+@login_required
+def add_user_coursework(request, coursework_slug):
+    # context dictionary should contain a dictionary that contains all of the courses the user sits
+    # with the associated coursework for that course
+    username = get_username(request)
+
+    # a list of objects that are the courses the current user
+    # is enrolled in and their grade
+    users_grades = UserGrade.objects.filter(sat_by=username)
+
+    # all courses sat by user
+    # they are course objects not names of courses
+    course_list = []
+    for grade in users_grades:
+        course_list.append(grade.grade_for)
+
+    associated_coursework = []
+    for index_course in course_list:
+        # adds the coursework associated with each users course into  a dictionary
+        associated_coursework.append((index_course, Coursework.objects.filter(course=index_course)))
+
+    context_dict = {'my_courses': course_list, 'coursework_grades': associated_coursework}
+
+    form = UserGrade()
+    if request.method == 'POST':
+        form = UserGradeForm(request.POST, request.FILES)
+        course = Course.objects.get(slug=coursework_slug)
+        if form.is_valid() and course:
+            user_grade = form.save(commit=False)
+            user_grade.sat_by = UserProfile.objects.get(user=request.user)
+            user_grade.grade_for = course
+            user_grade.save()
+            return HttpResponse()
+        else:
+            print(form.errors)
+            if course is None:
+                print("here")
+    context_dict['form'] = form
     return render(request, 'gradinator/band_calculator.html', context_dict)
 
 

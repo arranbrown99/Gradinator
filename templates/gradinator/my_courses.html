@@ -8,8 +8,17 @@
 		<p>You have not enrolled to any course. Head on over to enrol.</p>
 	{% endif %}
 
-
+	<ul>
 	{% for course in my_courses %}
-		{{course.name}} - <a href="{{course.url}}">{{course.url}} </a>
+	
+      	
+		
+		<li>
+			{{course.name}} - <a href="{{course.url}}">{{course.url}} </a>
+		</li>
+		
+	
+		
 	{% endfor %}
+	</ul>
 {% endblock %}
