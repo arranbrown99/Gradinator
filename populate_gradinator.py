@@ -116,7 +116,8 @@ def populate():
                        "year": 2,
                        "school": "School of Computing Science",
                        "coursework": wad_coursework,
-                       "slug": "wad"},
+                       },
+
                "OOSE": {"name": "Object Orientated Software Engineering",
                         "id": "COMPSCI 2008",
                         "url": "https://www.gla.ac.uk/coursecatalogue/course/?code=COMPSCI2008",
@@ -126,8 +127,8 @@ def populate():
                         "credits": 10,
                         "year": 2,
                         "school": "School of Computing Science",
-                        "coursework": oose_coursework,
-                        "slug": "oose"},
+                        "coursework": oose_coursework},
+
                "ADS": {"name": "Algorithms and Data Structures",
                        "id": "COMPSCI 2007",
                        "url": "https://www.gla.ac.uk/coursecatalogue/course/?code=COMPSCI2007",
@@ -138,7 +139,9 @@ def populate():
                        "year": 2,
                        "school": "School of Computing Science",
                        "coursework": ads_coursework,
-                       "slug": "ads"},
+
+                       },
+
                "NOSE": {"name": "Networks and operating system essentials 2",
                         "id": "COMPSCI 2024",
                         "url": "https://www.gla.ac.uk/coursecatalogue/course/?code=COMPSCI2024",
@@ -149,7 +152,9 @@ def populate():
                         "year": 2,
                         "school": "School of Computing Science",
                         "coursework": nose_coursework,
-                        "slug": "nose"},
+
+                        },
+
                "AF2": {"name": "Algorithmic Foundations 2",
                        "id": "COMPSCI 2003",
                        "url": "https://www.gla.ac.uk/coursecatalogue/course/?code=COMPSCI2003",
@@ -160,7 +165,8 @@ def populate():
                        "year": 2,
                        "school": "School of Computing Science",
                        "coursework": af_coursework,
-                       "slug": "af2"},
+
+                       },
                "JP2": {"name": "Java Programming 2",
                        "id": "COMPSCI 2001",
                        "url": "https://www.gla.ac.uk/coursecatalogue/course/?code=COMPSCI2001",
@@ -171,8 +177,7 @@ def populate():
                        "year": 2,
                        "school": "School of Computing Science",
                        "coursework": jp2_coursework,
-                       "slug": "jp2"},
-               }
+                       }}
 
     # If you want to add more courses or coursework
     # add them to the dictionaries above
@@ -180,7 +185,6 @@ def populate():
     # The code below goes through the course dictionary, then adds each course,
     # and then adds all the associated pages for that category.
     for course, course_data in courses.items():
-
         c = add_course(course_data["name"], course_data["id"], course_data["url"], course_data["taught_by"],
                        course_data["description"],
                        course_data["requirements_of_entry"], course_data["credits"], course_data["year"],
@@ -190,8 +194,8 @@ def populate():
 
     # Print out the courses we have added.
     for c in Course.objects.all():
-        for cw in Coursework.objects.filter(course=c):
-            print("- {0} - {1}".format(str(c), str(cw)))
+        for cw in Coursework.objects.filter(course=c): \
+                print("- {0} - {1}".format(str(c), str(cw)))
 
 
 def add_coursework(course, name, weight):

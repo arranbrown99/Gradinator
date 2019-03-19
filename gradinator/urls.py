@@ -13,7 +13,11 @@ urlpatterns = [
     url(r'enrol/$', views.enrol, name='enrol'),
     url(r'enrol/(?P<course_name_slug>[\w\-]+)/$', views.enrol, name='enrol'),
 
-    # url(r'band_calculator/$', views.band_calculator, name='band_calculator'),
+    url(r'band_calculator/$', views.band_calculator, name='band_calculator'),
+
+    url(r'add_user_coursework/$', views.add_user_coursework, name='add_user_coursework'),
+    url(r'add_user_coursework/(?P<coursework_slug>[\w\-]+)/$', views.add_user_coursework, name='add_user_coursework'),
+
     # url(r'gpa_calculator/$', views.gpa_calculator, name='gpa_calculator'),
     url(r'^register_profile/$', views.register_profile, name='register_profile'),
     # matches a course name

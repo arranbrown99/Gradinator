@@ -2,14 +2,23 @@
 {% load staticfiles %}
 {% block title %} My Courses {% endblock %}
 {% block body_block %}
-	{% if not_enrolled %}
+	{% if my_courses %}
 		<p>All the courses you have already enrolled in.</p>
 	{% else %}
 		<p>You have not enrolled to any course. Head on over to enrol.</p>
 	{% endif %}
 
-
+	<ul>
 	{% for course in my_courses %}
-		{{course.name}}
+	
+      	
+		
+		<li>
+			{{course.name}} - <a href="{{course.url}}">{{course.url}} </a>
+		</li>
+		
+	
+		
 	{% endfor %}
+	</ul>
 {% endblock %}

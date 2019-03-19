@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.shortcuts import get_list_or_404, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import HttpResponse
 
@@ -53,20 +53,19 @@ def account(request, username):
 
 @login_required
 def my_courses(request):
-    #     # a view that shows all courses that the current user has enrolled in
-    #     username = get_username(request)
-    #     # if user is logged in
-    #     if username is not None:
-    #         # a list of objects that are the courses the current user
-    #         # is enrolled in and their grade
-    #         course_list = UserGrade.objects.filter(SatBy=username)
-    #         context_dict = {'my_courses': course_list}
-    #     else:
-    #         # if not logged in no courses
-    #         # might need to change this
-    #         course_list = None
-    #         context_dict = {'my_courses': course_list}
-    return render(request, 'gradinator/my_courses.html', {})
+    # a view that shows all courses that the current user has enrolled in
+    username = get_username(request)
+    # a list of objects that are the courses the current user
+    # is enrolled in and their grade
+    users_grades = UserGrade.objects.filter(sat_by=username)
+
+    course_list = []
+    for grade in users_grades:
+        course_list.append(grade.grade_for)
+
+    context_dict = {'my_courses': course_list}
+
+    return render(request, 'gradinator/my_courses.html', context_dict)
 
 
 @login_required
@@ -95,10 +94,11 @@ def show_course(request, course_name_slug):
 
 @login_required
 def enrol(request, course_name_slug=""):
+    create_user_profile()
     # should show all courses where the user has not already enrolled in
     # ordered by year then by school ie school of computer science [needs discussion]
     # then lets users add courses to their account
-    user = UserProfile.objects.get(user=request.user)
+    user = get_username(request)
     users_course_list = UserGrade.objects.filter(sat_by=user)
 
     all_courses = Course.objects.filter()
@@ -124,7 +124,7 @@ def enrol(request, course_name_slug=""):
         else:
             print(form.errors)
             if course is None:
-                print(course)
+                print("here")
     context_dict['form'] = form
     # functionality to search for a course not tested yet
     # result_list = []
@@ -156,23 +156,74 @@ def search(request):
     return render(request, 'gradinator/search.html', context_dict)
 
 
-#
-# @login_required
-# def band_calculator(request):
-#     # context dictionary should contain a dictionary that contains all of the courses the user sits
-#     # with the associated coursework for that course
-#     username = get_username(request)
-#     # all courses sat by user
-#     # they are course objects not names of courses
-#     course_list = UserGrade.objects.filter(SatBy=username)
-#     associated_coursework = {}
-#     for index_course in course_list:
-#         # adds the coursework associated with each users course into  a dictionary
-#         associated_coursework[index_course] = Coursework.objects.filter(Course=index_course.ID)
-#     # a dictionary with values being dictionaries containing each users courses' coursework
-#     coursework_grades = UserCourseworkGrade.objects.filter(coursework_for__in=associated_coursework)
-#     context_dict = {'my_courses': course_list, 'coursework_grades': coursework_grades}
-#     return render(request, 'gradinator/band_calculator.html', context_dict)
+@login_required
+def band_calculator(request):
+    # context dictionary should contain a dictionary that contains all of the courses the user sits
+    # with the associated coursework for that course
+    username = get_username(request)
+
+    # a list of objects that are the courses the current user
+    # is enrolled in and their grade
+    users_grades = UserGrade.objects.filter(sat_by=username)
+
+    # all courses sat by user
+    # they are course objects not names of courses
+    course_list = []
+    for grade in users_grades:
+        course_list.append(grade.grade_for)
+
+    associated_coursework = []
+    for index_course in course_list:
+        # adds the coursework associated with each users course into  a dictionary
+        associated_coursework.append((index_course, Coursework.objects.filter(course=index_course)))
+    # a dictionary with values being dictionaries containing each users courses' coursework
+    # coursework_grades = UserCourseworkGrade.objects.filter(coursework_for__in=associated_coursework)
+
+    context_dict = {'my_courses': course_list, 'coursework_grades': associated_coursework}
+    return render(request, 'gradinator/band_calculator.html', context_dict)
+
+
+@login_required
+def add_user_coursework(request, coursework_slug):
+    # context dictionary should contain a dictionary that contains all of the courses the user sits
+    # with the associated coursework for that course
+    username = get_username(request)
+
+    # a list of objects that are the courses the current user
+    # is enrolled in and their grade
+    users_grades = UserGrade.objects.filter(sat_by=username)
+
+    # all courses sat by user
+    # they are course objects not names of courses
+    course_list = []
+    for grade in users_grades:
+        course_list.append(grade.grade_for)
+
+    associated_coursework = []
+    for index_course in course_list:
+        # adds the coursework associated with each users course into  a dictionary
+        associated_coursework.append((index_course, Coursework.objects.filter(course=index_course)))
+
+    context_dict = {'my_courses': course_list, 'coursework_grades': associated_coursework}
+
+    form = UserGrade()
+    if request.method == 'POST':
+        form = UserGradeForm(request.POST, request.FILES)
+        course = Course.objects.get(slug=coursework_slug)
+        if form.is_valid() and course:
+            user_grade = form.save(commit=False)
+            user_grade.sat_by = UserProfile.objects.get(user=request.user)
+            user_grade.grade_for = course
+            user_grade.save()
+            return HttpResponse()
+        else:
+            print(form.errors)
+            if course is None:
+                print("here")
+    context_dict['form'] = form
+    return render(request, 'gradinator/band_calculator.html', context_dict)
+
+
 #
 #
 # @login_required
@@ -187,11 +238,8 @@ def search(request):
 
 def get_username(request):
     # helper function that gets the username if the user is logged in
-    if request.user.is_authenticated():
-        username = request.user.username
-        return username
-    else:
-        return None
+    user = UserProfile.objects.get(user=request.user)
+    return user
 
 
 def create_user_profile():
@@ -202,6 +250,7 @@ def create_user_profile():
 
 @login_required
 def register_profile(request):
+    create_user_profile()
     form = UserProfileForm()
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES)
