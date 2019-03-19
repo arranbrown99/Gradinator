@@ -16,7 +16,7 @@
 	<form  id="enrol_btn" method="post" action="/gradinator/enrol/{{course.slug}}/" data-courseid="{{course.id}}" enctype="multipart/form-data">
 		{% csrf_token %}
 		{{ form.as_p }}
-		<input type="submit" id="submit-form" value="{{course.name}}" />
+		<input type="submit" value="{{course.name}}" />
 	</form>
 
 	{% endfor %}
