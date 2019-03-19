@@ -1,7 +1,7 @@
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
-from django.db.models import *
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 # Create your models here.
@@ -49,10 +49,12 @@ class Course(models.Model):
 class Coursework(models.Model):
     course = models.ForeignKey(Course, default="")
     weight = models.FloatField(default=0)
-    name = models.CharField(max_length=30, default="", )
+    name = models.CharField(max_length=30, default="",unique=True )
 
+    slug = models.SlugField(default="")
     class Meta:
         verbose_name_plural = 'Coursework'
+        ordering = ['course']
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -74,10 +76,11 @@ class UserGrade(models.Model):
 
 
 class UserCourseworkGrade(models.Model):
+    # weak entity
     grade_for = models.ForeignKey(Coursework)
     sat_by = models.ForeignKey(UserProfile)
 
-    grade = FloatField(max_length=3)
+    grade = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(1)])
 
     class Meta:
         unique_together = ('grade_for', 'sat_by')

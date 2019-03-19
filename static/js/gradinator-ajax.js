@@ -7,7 +7,8 @@ frm.submit(function () {
 		url: frm.attr('action'),
 		data: frm.serialize(),
 		success: function (data) {
-			$("#added").html(data);
+			$(this).hide();
+			
 		},
 		error: function(data) {
 			$("#added").html("Something went wrong!");
@@ -16,4 +17,5 @@ frm.submit(function () {
 	);
 	return false;
 });
+
 

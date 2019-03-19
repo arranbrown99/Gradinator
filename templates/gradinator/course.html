@@ -4,20 +4,33 @@
 {% block body_block %}
 	{% if course %}
 		<h1>{{ course.name }}</h1>
-		<h1>{{ course.id }}</h1>
-		<h2>{{ course.school }}</h2>
-		<h2>Taught By - {{ course.taught_by }}</h2>
-		
-		<h2>Description - 
-		{{ course.description }}
-		</h2>
-		<h2>Requirements of Entry - {{ course.requirements_of_entry }}</h2>
-		<h2>{{ course.credits }} credits</h2>
-		<h2>{{ course.year }} year</h2>
 
-		{% for coursework in coursework_grades %}
-			{{coursework.name}}
+		{{ course.id }}<br>
+		{{ course.school }}<br>
+
+		<h3>Taught By</h3>
+		{{ course.taught_by }}<br>
+		
+		<h3>Description</h3>
+		{{ course.description }}<br>
+		
+		<h3>Requirements of Entry</h3>
+		{{ course.requirements_of_entry }}<br><br>
+
+		{{ course.credits }} credits<br>
+		{{ course.year }} year <br><br>
+
+		<h3>Coursework</h3>
+		<ul>
+		{% for cw in coursework %}
+			<li>
+				{{cw.name}}	{{cw.weight}}
+			</li>
+			
 		{% endfor %}
+		</ul>
+
+		<a href="{{course.url}}">MyGlasgow Link </a>
 
 	{% else %}
 		The specified course does not exist!

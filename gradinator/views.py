@@ -13,6 +13,7 @@ from gradinator.models import UserCourseworkGrade
 
 from gradinator.forms import UserProfileForm
 from gradinator.forms import UserGradeForm
+from gradinator.forms import UserCourseworkGradeForm
 
 from gradinator.webhose_search import run_query
 
@@ -110,7 +111,7 @@ def enrol(request, course_name_slug=""):
     not_enrolled = Course.objects.exclude(id__in=to_exclude)
     context_dict = {'not_enrolled': not_enrolled}
 
-    form = UserGrade()
+    form = UserGradeForm()
     if request.method == 'POST':
         form = UserGradeForm(request.POST, request.FILES)
         course = Course.objects.get(slug=course_name_slug)
@@ -119,12 +120,12 @@ def enrol(request, course_name_slug=""):
             user_grade.sat_by = UserProfile.objects.get(user=request.user)
             user_grade.grade_for = course
             user_grade.save()
-            return HttpResponse()
+            return render(request, 'gradinator/enrol.html', context_dict)
         else:
             print(form.errors)
-            if course is None:
-                print(course)
+
     context_dict['form'] = form
+
     # functionality to search for a course not tested yet
     # result_list = []
     # if request.method == 'POST':
@@ -183,44 +184,50 @@ def band_calculator(request):
 
 
 @login_required
-def add_user_coursework(request, coursework_slug):
-    # context dictionary should contain a dictionary that contains all of the courses the user sits
-    # with the associated coursework for that course
+def add_user_coursework(request):
+    # context dictionary should contain a dictionary that contains all of the coursework associated with each course
+    #  the user takes not including coursework already added
+
     username = get_username(request)
+    users_courses = UserGrade.objects.filter(sat_by=username)
 
-    # a list of objects that are the courses the current user
-    # is enrolled in and their grade
-    users_grades = UserGrade.objects.filter(sat_by=username)
+    users_courseworks = UserCourseworkGrade.objects.filter(sat_by=username)
 
-    # all courses sat by user
-    # they are course objects not names of courses
-    course_list = []
-    for grade in users_grades:
-        course_list.append(grade.grade_for)
+    not_enrolled ={}
+    for course in users_courses:
+        all_coursework = Coursework.objects.filter(course=course.grade_for)
+        exclude = []
+        for users_coursework in users_courseworks:
+            for coursework in all_coursework:
+                if users_coursework.grade_for == coursework:
+                    exclude.append(coursework.name)
 
-    associated_coursework = []
-    for index_course in course_list:
-        # adds the coursework associated with each users course into  a dictionary
-        associated_coursework.append((index_course, Coursework.objects.filter(course=index_course)))
+        filtered = all_coursework.exclude(name__in = exclude)
+        not_enrolled[course.grade_for] = filtered
 
-    context_dict = {'my_courses': course_list, 'coursework_grades': associated_coursework}
+    context_dict = {'not_enrolled': not_enrolled}
 
-    form = UserGrade()
+    return render(request, 'gradinator/add_user_coursework.html', context_dict)
+
+
+def add_coursework_form(request, coursework_slug):
+    form = UserCourseworkGradeForm()
     if request.method == 'POST':
-        form = UserGradeForm(request.POST, request.FILES)
-        course = Course.objects.get(slug=coursework_slug)
-        if form.is_valid() and course:
+        form = UserCourseworkGradeForm(request.POST, request.FILES)
+        coursework = Coursework.objects.get(slug=coursework_slug)
+        if form.is_valid() and coursework:
+
             user_grade = form.save(commit=False)
             user_grade.sat_by = UserProfile.objects.get(user=request.user)
-            user_grade.grade_for = course
+            user_grade.grade_for = coursework
             user_grade.save()
-            return HttpResponse()
+
+            return add_user_coursework(request)
         else:
             print(form.errors)
-            if course is None:
-                print("here")
-    context_dict['form'] = form
-    return render(request, 'gradinator/band_calculator.html', context_dict)
+
+    context_dict = {'form': form, "coursework":coursework_slug}
+    return render(request, 'gradinator/add_coursework_form.html', context_dict)
 
 
 #

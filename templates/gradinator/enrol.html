@@ -13,7 +13,7 @@
 	
 	{% for course in not_enrolled %}
 
-	<form  id="enrol_btn" method="post" action="/gradinator/enrol/{{course.slug}}/" data-courseid="{{course.id}}" enctype="multipart/form-data">
+	<form  name=hide_btn id="enrol_btn" method="post" action="/gradinator/enrol/{{course.slug}}/" data-courseid="{{course.id}}" enctype="multipart/form-data">
 		{% csrf_token %}
 		{{ form.as_p }}
 		<input type="submit" value="{{course.name}}" />
