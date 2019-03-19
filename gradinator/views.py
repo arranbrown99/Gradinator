@@ -94,6 +94,7 @@ def show_course(request, course_name_slug):
 
 @login_required
 def enrol(request, course_name_slug=""):
+    create_user_profile()
     # should show all courses where the user has not already enrolled in
     # ordered by year then by school ie school of computer science [needs discussion]
     # then lets users add courses to their account
@@ -123,7 +124,7 @@ def enrol(request, course_name_slug=""):
         else:
             print(form.errors)
             if course is None:
-                print(course)
+                print("here")
     context_dict['form'] = form
     # functionality to search for a course not tested yet
     # result_list = []
@@ -208,6 +209,7 @@ def create_user_profile():
 
 @login_required
 def register_profile(request):
+    create_user_profile()
     form = UserProfileForm()
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES)
