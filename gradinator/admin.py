@@ -11,7 +11,7 @@ class CourseAdmin(admin.ModelAdmin):
 
 
 class CourseworkAdmin(admin.ModelAdmin):
-    list_display = ('name', 'weight')
+    list_display = ('name', 'course', 'weight')
 
 
 class UserGradeAdmin(admin.ModelAdmin):
