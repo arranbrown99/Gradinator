@@ -174,6 +174,25 @@ def band_calculator(request):
 
     appended = False
     for course in users_courses:
+        c = course.grade_for
+        users_cw = UserCourseworkGrade.objects.filter(sat_by=username)
+        list_coursework = []
+
+        for coursework in users_cw:
+            if coursework.grade_for.course == c:
+                list_coursework.append(coursework)
+
+        # total weight of all coursework the user has sat so far
+        weight_sat = 0
+        for coursework in list_coursework:
+            weight_sat += coursework.grade_for.weight
+
+        # remaining weight of all coursework the user still has to sit
+        # if it is 0 then all coursework will have been sat and their is nothing to predict
+        remaining_weight = 100 - weight_sat
+        if remaining_weight == 0:
+            continue
+
         all_coursework = Coursework.objects.filter(course=course.grade_for)
         include = []
         for users_coursework in users_courseworks:
@@ -211,12 +230,13 @@ def band_calculator_slug(request, course_name_slug):
 
     # total weight of all coursework the user has sat so far
     weight_sat = 0
-    for coursework in users_coursework:
+    for coursework in list_coursework:
         weight_sat += coursework.grade_for.weight
 
     # remaining weight of all coursework the user still has to sit
     remaining_weight = 100 - weight_sat
-
+    if remaining_weight == 0:
+        return band_calculator(request)
     context_dict = {"average_needed": {}}
 
     bands = {"A": {"A1": 92, "A2": 85, "A3": 79, "A4": 74, "A5": 70}, "B": {"B1": 67, "B2": 64, "B3": 60, },
@@ -225,7 +245,7 @@ def band_calculator_slug(request, course_name_slug):
         context_dict["average_needed"][string_grade] = {}
         for band, grade in dict_grades.items():
             total_usersgrade = 0
-            for coursework in users_coursework:
+            for coursework in list_coursework:
                 total_usersgrade += coursework.grade * coursework.grade_for.weight / 100
 
             average_needed = (grade - total_usersgrade) * 100 / remaining_weight
@@ -311,8 +331,8 @@ def gpa_calculator(request):
         triple_completed_usergrade.append((usergrade, current_biggest, grade_points[current_biggest]))
         gpa += grade_points[current_biggest][1] * usergrade.grade_for.credits
         total_credits += usergrade.grade_for.credits
-    gpa = gpa/total_credits
-    context_dict = {"list": triple_completed_usergrade, "gpa":gpa}
+    gpa = gpa / total_credits
+    context_dict = {"list": triple_completed_usergrade, "gpa": gpa}
     return render(request, 'gradinator/gpa_calculator.html', context_dict)
 
 
