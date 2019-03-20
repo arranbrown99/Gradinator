@@ -206,7 +206,7 @@ def band_calculator_slug(request, course_name_slug):
     list_coursework = []
 
     for coursework in users_coursework:
-        if (coursework.grade_for.course == course):
+        if coursework.grade_for.course == course:
             list_coursework.append(coursework)
 
     # total weight of all coursework the user has sat so far
@@ -322,3 +322,29 @@ def register_profile(request):
             print(form.errors)
     context_dict = {'form': form}
     return render(request, 'gradinator/profile_registration.html', context_dict)
+
+
+def load_usergrade(request):
+    # function that calculates a users grade for every course if they have completed every peice of coursework
+    #  for that course
+    create_user_profile()
+    username = get_username()
+
+    completed_user_course = []
+    usergrade = UserGrade.object.filter(sat_by=username)
+    users_coursework = UserCourseworkGrade.objects.filter(sat_by=username)
+    for user_course in usergrade:
+
+        # a list of all coursework associated with the current course
+        list_coursework = []
+
+        for coursework in users_coursework:
+            if coursework.grade_for.course == user_course.grade_for:
+                list_coursework.append(coursework)
+
+        # if a user has done all coursework for a given course
+        coursework_for_course = Coursework.objects.filter(course=user_course.grade_for)
+        if len(coursework_for_course) == len(list_coursework):
+            completed_user_course.append(user_course)
+
+    
