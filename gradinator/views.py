@@ -283,16 +283,37 @@ def add_coursework_form(request, coursework_slug):
     return render(request, 'gradinator/add_coursework_form.html', context_dict)
 
 
-#
-#
-# @login_required
-# def gpa_calculator(request):
-#     # view returns the object of the current user which contains a field called GPA
-#     # which  is not physically calculated here but by the model
-#     username = get_username(request)
-#
-#     context_dict = {'user': User.objects.filter(GUID=username)}
-#     return render(request, 'gradinator/gpa_calculator.html', context_dict)
+@login_required
+def gpa_calculator(request):
+    # calculates the gpa
+
+    list_completed_usergrade = load_usergrade(request)
+    grade_points = {"A1": (92, 22), "A2": (85, 21), "A3": (79, 20), "A4": (74, 19), "A5": (70, 18),
+                    "B1": (67, 17), "B2": (64, 16), "B3": (60, 15),
+                    "C1": (57, 14), "C2": (54, 13), "C3": (50, 12),
+                    "D1": (47, 11), "D2": (44, 10), "D3": (40, 9),
+                    "E1": (37, 8), "E2": (34, 7), "E3": (30, 6),
+                    "F1": (27, 5), "F2": (24, 4), "F3": (20, 3),
+                    "G1": (15, 2), "G2": (10, 1), "H": (0, 0), "CW": (0, 0)}
+    triple_completed_usergrade = []
+    current_biggest = "A1"
+    current_smallest = "CW"
+    # calculates the grade point for a given grade
+    # and the GPA
+    gpa = 0
+    total_credits = 0
+    for usergrade in list_completed_usergrade:
+        for key, value in grade_points.items():
+            if usergrade.grade >= value[0] and value[0] > grade_points[current_smallest][0]:
+                current_smallest = key
+            if usergrade.grade <= value[0] and value[0] < grade_points[current_biggest][0]:
+                current_biggest = key
+        triple_completed_usergrade.append((usergrade, current_biggest, grade_points[current_biggest]))
+        gpa += grade_points[current_biggest][1] * usergrade.grade_for.credits
+        total_credits += usergrade.grade_for.credits
+    gpa = gpa/total_credits
+    context_dict = {"list": triple_completed_usergrade, "gpa":gpa}
+    return render(request, 'gradinator/gpa_calculator.html', context_dict)
 
 
 def get_username(request):
@@ -328,11 +349,12 @@ def load_usergrade(request):
     # function that calculates a users grade for every course if they have completed every peice of coursework
     #  for that course
     create_user_profile()
-    username = get_username()
+    username = get_username(request)
 
-    completed_user_course = []
-    usergrade = UserGrade.object.filter(sat_by=username)
+    completed_user_courses = []
+    usergrade = UserGrade.objects.filter(sat_by=username)
     users_coursework = UserCourseworkGrade.objects.filter(sat_by=username)
+
     for user_course in usergrade:
 
         # a list of all coursework associated with the current course
@@ -345,6 +367,13 @@ def load_usergrade(request):
         # if a user has done all coursework for a given course
         coursework_for_course = Coursework.objects.filter(course=user_course.grade_for)
         if len(coursework_for_course) == len(list_coursework):
-            completed_user_course.append(user_course)
 
-    
+            total_coursework_grade = 0
+            for coursework in list_coursework:
+                total_coursework_grade += (coursework.grade * coursework.grade_for.weight / 100)
+
+            user_course.grade = total_coursework_grade
+            user_course.save()
+            completed_user_courses.append(user_course)
+
+    return completed_user_courses

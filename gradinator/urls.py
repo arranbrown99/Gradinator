@@ -19,7 +19,7 @@ urlpatterns = [
     url(r'add_user_coursework/$', views.add_user_coursework, name='add_user_coursework'),
     url(r'add_coursework_form/(?P<coursework_slug>[\w\-]+)/$', views.add_coursework_form, name='add_coursework_form'),
 
-    # url(r'gpa_calculator/$', views.gpa_calculator, name='gpa_calculator'),
+    url(r'gpa_calculator/$', views.gpa_calculator, name='gpa_calculator'),
     url(r'^register_profile/$', views.register_profile, name='register_profile'),
     # matches a course name
     url(r'^course/(?P<course_name_slug>[\w\-]+)/$', views.show_course, name='show_course'),
