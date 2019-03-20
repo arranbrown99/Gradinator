@@ -1,10 +1,12 @@
+from django.utils.safestring import mark_safe
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
-from django.shortcuts import HttpResponse
+from django.shortcuts import render_to_response
 
+import json
 from gradinator.models import UserGrade
 from gradinator.models import UserProfile
 from gradinator.models import Course
@@ -169,19 +171,69 @@ def band_calculator(request):
     users_courseworks = UserCourseworkGrade.objects.filter(sat_by=username)
 
     not_enrolled = {}
+
+    appended = False
     for course in users_courses:
         all_coursework = Coursework.objects.filter(course=course.grade_for)
         include = []
         for users_coursework in users_courseworks:
             for coursework in all_coursework:
                 if users_coursework.grade_for == coursework:
+                    appended = True
                     include.append(coursework)
 
         filtered = users_courseworks.filter(grade_for__in=include)
         not_enrolled[course.grade_for] = filtered
 
-    context_dict = {'not_enrolled': not_enrolled}
+    if appended:
+        context_dict = {}
+        context_dict['not_enrolled'] = not_enrolled
+
+    else:
+        context_dict = {'not_enrolled': None}
+
     return render(request, 'gradinator/band_calculator.html', context_dict)
+
+
+@login_required
+def band_calculator_slug(request, course_name_slug):
+    # should take in a course that a user sits and has entered coursework grades for
+    # should output what the user needs to get in the remaining coursework to get each band
+
+    username = get_username(request)
+    course = Course.objects.get(slug=course_name_slug)
+    users_coursework = UserCourseworkGrade.objects.filter(sat_by=username)
+    list_coursework = []
+
+    for coursework in users_coursework:
+        if (coursework.grade_for.course == course):
+            list_coursework.append(coursework)
+
+    # total weight of all coursework the user has sat so far
+    weight_sat = 0
+    for coursework in users_coursework:
+        weight_sat += coursework.grade_for.weight
+
+    # remaining weight of all coursework the user still has to sit
+    remaining_weight = 100 - weight_sat
+
+    context_dict = {"average_needed": {}}
+
+    bands = {"A": {"A1": 92, "A2": 85, "A3": 79, "A4": 74, "A5": 70}, "B": {"B1": 67, "B2": 64, "B3": 60, },
+             "C": {"C1": 57, "C2": 64, "C3": 50, }, "D": {"D1": 47, "D2": 44, "D3": 40, }}
+    for string_grade, dict_grades in bands.items():
+        context_dict["average_needed"][string_grade] = {}
+        for band, grade in dict_grades.items():
+            total_usersgrade = 0
+            for coursework in users_coursework:
+                total_usersgrade += coursework.grade * coursework.grade_for.weight / 100
+
+            average_needed = (grade - total_usersgrade) * 100 / remaining_weight
+            average_needed = round(average_needed)
+            context_dict["average_needed"][string_grade][band] = average_needed
+    context_dict["course"] = course
+
+    return render(request, 'gradinator/band_calculator_slug.html', context_dict)
 
 
 @login_required
@@ -194,7 +246,7 @@ def add_user_coursework(request):
 
     users_courseworks = UserCourseworkGrade.objects.filter(sat_by=username)
 
-    not_enrolled ={}
+    not_enrolled = {}
     for course in users_courses:
         all_coursework = Coursework.objects.filter(course=course.grade_for)
         exclude = []
@@ -203,7 +255,7 @@ def add_user_coursework(request):
                 if users_coursework.grade_for == coursework:
                     exclude.append(coursework.name)
 
-        filtered = all_coursework.exclude(name__in = exclude)
+        filtered = all_coursework.exclude(name__in=exclude)
         not_enrolled[course.grade_for] = filtered
 
     context_dict = {'not_enrolled': not_enrolled}
@@ -227,7 +279,7 @@ def add_coursework_form(request, coursework_slug):
         else:
             print(form.errors)
 
-    context_dict = {'form': form, "coursework":coursework_slug}
+    context_dict = {'form': form, "coursework": coursework_slug}
     return render(request, 'gradinator/add_coursework_form.html', context_dict)
 
 

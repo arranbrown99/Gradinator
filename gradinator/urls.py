@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'enrol/(?P<course_name_slug>[\w\-]+)/$', views.enrol, name='enrol'),
 
     url(r'band_calculator/$', views.band_calculator, name='band_calculator'),
+    url(r'band_calculator/(?P<course_name_slug>[\w\-]+)/$', views.band_calculator_slug, name='band_calculator_slug'),
 
     url(r'add_user_coursework/$', views.add_user_coursework, name='add_user_coursework'),
     url(r'add_coursework_form/(?P<coursework_slug>[\w\-]+)/$', views.add_coursework_form, name='add_coursework_form'),

@@ -1,0 +1,29 @@
+{% extends 'gradinator/base.html' %}
+{% load staticfiles %}
+{% block title %} Band Calculator{% endblock %}
+
+{% block body_block %}
+<h3>Band Calculator</h3>
+<div>
+    <h5>{{course}}</h5>
+    {% for grade, bands in average_needed.items %}
+    <button class="predict_btn " name={{forloop.counter}}
+            type="button">Predict bands for a {{grade}}
+    </button>
+    <div id="div{{forloop.counter}}">
+        {% for band, needed_grade in bands.items %}
+
+        {% if needed_grade < 100 %}
+        <p class="to_be_hidden p{{forloop.parentloop.counter}}">To get a {{band}} you will need at an average of {{needed_grade}}% in each
+            remaining
+            piece of coursework.</p>
+
+        <br>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+
+<div><br><br>Not these are not indicative of the true bands by the end of the course and are just estimates</div>
+{% endblock %}

@@ -1,30 +1,42 @@
 {% extends 'gradinator/base.html' %}
 {% load staticfiles %}
-{% block title %} Band Calculator {% endblock %}
+{% block title %} Band Calculator{% endblock %}
+
 {% block body_block %}
 <h3>Band Calculator</h3>
 <div>
-	Given what you got in each peice coursework so far click the button to predict what you need to get in the remaining coursework for each band.
+    Given what you got in each peice coursework so far click the button to predict what you need to get in the remaining
+    coursework for each band.
 </div>
 <div>
-	<br>
-	{% for course, list_coursework in not_enrolled.items %}
-		{% if list_coursework %}
-			<h4>{{course}}</h4>
+    <br>
+    {% if not not_enrolled %}
+    No course to show! <br>
+    Head on over to enrol to add your courses and add user coursework to add your coursework
+    {% endif %}
+    {% for course, list_coursework in not_enrolled.items %}
 
-		<ul>
+    {% if list_coursework %}
+    <h4>{{course}}</h4>
 
-			{% for coursework in list_coursework %}
-				<li>
+    <ul>
 
-						{{coursework.grade_for}} - {{coursework.grade}}%<br>
-				</li>
-			{% endfor %}
+        {% for coursework in list_coursework %}
+        <li>
 
-			<button type="button">Predict bands for {{course}}</button>
+            {{coursework.grade_for}} - {{coursework.grade}}%<br>
+        </li>
+        {% endfor %}
 
-		</ul>
-	{% endif %}
-	{% endfor %}
+
+                <form action="/gradinator/band_calculator/{{course.slug}}/">
+                <input type="submit" value= "Predict bands for {{course}}"/>
+            </form>
+
+    </ul>
+    {% endif %}
+
+
+    {% endfor %}
 </div>
 {% endblock %}
