@@ -2,24 +2,29 @@
 {% load staticfiles %}
 {% block title %} Band Calculator {% endblock %}
 {% block body_block %}
+<h3>Band Calculator</h3>
 <div>
-	Input what you got in each piece of coursework and what you need in each remaining peice of coursework will be calculated so that you can achieve a given band
+	Given what you got in each peice coursework so far click the button to predict what you need to get in the remaining coursework for each band.
 </div>
 <div>
-	{% for tuple in coursework_grades %}
-	{{tuple.0.name}} 
-	<ul>
+	<br>
+	{% for course, list_coursework in not_enrolled.items %}
+		{% if list_coursework %}
+			<h4>{{course}}</h4>
 
-		{% for coursework in tuple.1 %}
-		<li id={{course.name}}>
-			{{coursework.name}} -
-			<form class=coursework-submittion action="/action_page.php">
-				What you got in {{course.name}} here where possible <input type="text" name="fname"><br>
-				<input type="submit" value="Submit">
-			</form>
-		</li>
-		{% endfor %}
-	</ul>
+		<ul>
+
+			{% for coursework in list_coursework %}
+				<li>
+
+						{{coursework.grade_for}} - {{coursework.grade}}%<br>
+				</li>
+			{% endfor %}
+
+			<button type="button">Predict bands for {{course}}</button>
+
+		</ul>
+	{% endif %}
 	{% endfor %}
 </div>
 {% endblock %}

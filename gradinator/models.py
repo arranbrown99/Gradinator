@@ -48,10 +48,11 @@ class Course(models.Model):
 
 class Coursework(models.Model):
     course = models.ForeignKey(Course, default="")
-    weight = models.FloatField(default=0)
-    name = models.CharField(max_length=30, default="",unique=True )
+    weight = models.FloatField(default=0,validators=[MaxValueValidator(100), MinValueValidator(1)])
+    name = models.CharField(max_length=30, default="", unique=True)
 
     slug = models.SlugField(default="")
+
     class Meta:
         verbose_name_plural = 'Coursework'
         ordering = ['course']
@@ -69,7 +70,7 @@ class UserGrade(models.Model):
     grade_for = models.ForeignKey(Course)
     sat_by = models.ForeignKey(UserProfile)
 
-    grade = models.IntegerField(default=0)
+    grade = models.IntegerField(default=0, validators=[MaxValueValidator(100), MinValueValidator(0)])
 
     class Meta:
         unique_together = ('grade_for', 'sat_by')
@@ -80,7 +81,7 @@ class UserCourseworkGrade(models.Model):
     grade_for = models.ForeignKey(Coursework)
     sat_by = models.ForeignKey(UserProfile)
 
-    grade = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(1)])
+    grade = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(0)])
 
     class Meta:
         unique_together = ('grade_for', 'sat_by')

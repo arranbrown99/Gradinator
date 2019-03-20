@@ -4,23 +4,27 @@
 {% block body_block %}
 <div>
 
-	<h1>Enrol with Gradinator</h1>
-	{% if not_enrolled %}
-		<p>All the courses you are not already enrolled in.</p>
-	{% else %}
-		<p>You have enrolled to every course.</p>
-	{% endif %}
-	
-	{% for course in not_enrolled %}
+    <h1>Enrol with Gradinator</h1>
+    {% if not_enrolled %}
+    <p>All the courses you are not already enrolled in. Click the button to enrol.</p>
+    {% else %}
+    <p>You have enrolled to every course.</p>
+    {% endif %}
 
-	<form  name=hide_btn id="enrol_btn" method="post" action="/gradinator/enrol/{{course.slug}}/" data-courseid="{{course.id}}" enctype="multipart/form-data">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<input type="submit" value="{{course.name}}" />
-	</form>
+    {% for course in not_enrolled %}
 
-	{% endfor %}
+    <form name=hide_btn id="enrol_btn" method="post" action="/gradinator/enrol/{{course.slug}}/"
+          data-courseid="{{course.id}}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="{{course.name}}"/>
+        -
+        <a href="/gradinator/course/{{course.slug}}/">
+            Course Details
+        </a>
+    </form>
 
+    {% endfor %}
 
 
 </div>

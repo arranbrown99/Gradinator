@@ -54,6 +54,7 @@ def account(request, username):
 
 @login_required
 def my_courses(request):
+    create_user_profile()
     # a view that shows all courses that the current user has enrolled in
     username = get_username(request)
     # a list of objects that are the courses the current user
@@ -95,6 +96,7 @@ def show_course(request, course_name_slug):
 
 @login_required
 def enrol(request, course_name_slug=""):
+    create_user_profile()
     # should show all courses where the user has not already enrolled in
     # ordered by year then by school ie school of computer science [needs discussion]
     # then lets users add courses to their account
@@ -158,28 +160,27 @@ def search(request):
 
 @login_required
 def band_calculator(request):
-    # context dictionary should contain a dictionary that contains all of the courses the user sits
-    # with the associated coursework for that course
+    # context dictionary should contain a dictionary that contains all of the coursework associated with each course
+    #  the user takes only including coursework already added
+    create_user_profile()
     username = get_username(request)
+    users_courses = UserGrade.objects.filter(sat_by=username)
 
-    # a list of objects that are the courses the current user
-    # is enrolled in and their grade
-    users_grades = UserGrade.objects.filter(sat_by=username)
+    users_courseworks = UserCourseworkGrade.objects.filter(sat_by=username)
 
-    # all courses sat by user
-    # they are course objects not names of courses
-    course_list = []
-    for grade in users_grades:
-        course_list.append(grade.grade_for)
+    not_enrolled = {}
+    for course in users_courses:
+        all_coursework = Coursework.objects.filter(course=course.grade_for)
+        include = []
+        for users_coursework in users_courseworks:
+            for coursework in all_coursework:
+                if users_coursework.grade_for == coursework:
+                    include.append(coursework)
 
-    associated_coursework = []
-    for index_course in course_list:
-        # adds the coursework associated with each users course into  a dictionary
-        associated_coursework.append((index_course, Coursework.objects.filter(course=index_course)))
-    # a dictionary with values being dictionaries containing each users courses' coursework
-    # coursework_grades = UserCourseworkGrade.objects.filter(coursework_for__in=associated_coursework)
+        filtered = users_courseworks.filter(grade_for__in=include)
+        not_enrolled[course.grade_for] = filtered
 
-    context_dict = {'my_courses': course_list, 'coursework_grades': associated_coursework}
+    context_dict = {'not_enrolled': not_enrolled}
     return render(request, 'gradinator/band_calculator.html', context_dict)
 
 
@@ -187,7 +188,7 @@ def band_calculator(request):
 def add_user_coursework(request):
     # context dictionary should contain a dictionary that contains all of the coursework associated with each course
     #  the user takes not including coursework already added
-
+    create_user_profile()
     username = get_username(request)
     users_courses = UserGrade.objects.filter(sat_by=username)
 

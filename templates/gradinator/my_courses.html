@@ -2,23 +2,23 @@
 {% load staticfiles %}
 {% block title %} My Courses {% endblock %}
 {% block body_block %}
-	{% if my_courses %}
-		<p>All the courses you have already enrolled in.</p>
-	{% else %}
-		<p>You have not enrolled to any course. Head on over to enrol.</p>
-	{% endif %}
+{% if my_courses %}
+<p>All the courses you have already enrolled in.</p>
+{% else %}
+<p>You have not enrolled to any course. Head on over to enrol.</p>
+{% endif %}
 
-	<ul>
-	{% for course in my_courses %}
-	
-      	
-		
-		<li>
-			{{course.name}} - <a href="{{course.url}}">{{course.url}} </a>
-		</li>
-		
-	
-		
-	{% endfor %}
-	</ul>
+<ul>
+    {% for course in my_courses %}
+
+
+    <li>
+        <a href="/gradinator/course/{{course.slug}}/">
+            {{course.name}}
+        </a>
+    </li>
+
+
+    {% endfor %}
+</ul>
 {% endblock %}

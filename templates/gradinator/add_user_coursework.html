@@ -3,24 +3,30 @@
 {% block title %} Band Calculator {% endblock %}
 {% block body_block %}
 <div>
-	Input what you got in each piece of coursework 
+    Input what you got in each piece of coursework
 </div>
 <div>
-	{% for course, list_coursework in not_enrolled.items %}
-		{% if list_coursework %}
-			<h3>{{course}}</h3>
-		{% endif %}
-		<ul>	
-			
-			{% for coursework in list_coursework %}
-				<li>
-					<a href="/gradinator/add_coursework_form/{{coursework.slug}}/">
-						{{coursework.name}}
-					</a><br>
-				</li>
-			{% endfor %}  		
-			
-		</ul>
-	{% endfor %}
+    {% for course, list_coursework in not_enrolled.items %}
+    {% if list_coursework %}
+    <h3>{{course}}</h3>
+    {% endif %}
+    <ul>
+
+        {% for coursework in list_coursework %}
+        <li>
+            <form action="/gradinator/add_coursework_form/{{coursework.slug}}/">
+                <input type="submit" value= "{{coursework.name}}"/>
+            </form>
+
+
+
+            <br>
+
+
+        </li>
+        {% endfor %}
+
+    </ul>
+    {% endfor %}
 </div>
 {% endblock %}

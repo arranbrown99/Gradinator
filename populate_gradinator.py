@@ -50,10 +50,10 @@ def populate():
          "weight": 0.8},
     ]
     ads_coursework = [
-        {"name": "ads AE1",
+        {"name": "ads assessed exercise1",
          "course": "ads",
          "weight": 0.1},
-        {"name": "ads AE2",
+        {"name": "ads assessed exercise2",
          "course": "ads",
          "weight": 0.1},
         {"name": "ads exam",
@@ -61,10 +61,10 @@ def populate():
          "weight": 0.8},
     ]
     nose_coursework = [
-        {"name": "nose AE1",
+        {"name": "nose assessed exercise1",
          "course": "nose",
          "weight": 0.1},
-        {"name": "nose AE2",
+        {"name": "nose assessed exercise2",
          "course": "nose",
          "weight": 0.1},
         {"name": "nose exam",
@@ -72,10 +72,10 @@ def populate():
          "weight": 0.8},
     ]
     af_coursework = [
-        {"name": "af2 AE1",
+        {"name": "af2 assessed exercise1",
          "course": "af",
          "weight": 0.1},
-        {"name": "af2 AE2",
+        {"name": "af2 assessed exercise2",
          "course": "af",
          "weight": 0.1},
         {"name": "af2 exam",
@@ -202,7 +202,7 @@ def add_coursework(course, name, weight):
     cw = Coursework.objects.get_or_create(course=course, name=name)[0]
     cw.course = course
     cw.name = name
-    cw.weight = weight
+    cw.weight = weight * 100
     cw.save()
     return cw
 
