@@ -249,7 +249,7 @@ def band_calculator_slug(request, course_name_slug):
                 total_usersgrade += coursework.grade * coursework.grade_for.weight / 100
 
             average_needed = (grade - total_usersgrade) * 100 / remaining_weight
-            average_needed = round(average_needed)
+            average_needed = round(average_needed,2)
             context_dict["average_needed"][string_grade][band] = average_needed
     context_dict["course"] = course
 
@@ -316,22 +316,29 @@ def gpa_calculator(request):
                     "F1": (27, 5), "F2": (24, 4), "F3": (20, 3),
                     "G1": (15, 2), "G2": (10, 1), "H": (0, 0), "CW": (0, 0)}
     triple_completed_usergrade = []
-    current_biggest = "A1"
-    current_smallest = "CW"
+
     # calculates the grade point for a given grade
     # and the GPA
     gpa = 0
     total_credits = 0
     for usergrade in list_completed_usergrade:
+        current_biggest = "A1"
+        current_smallest = "CW"
         for key, value in grade_points.items():
+            number = usergrade.grade
             if usergrade.grade >= value[0] and value[0] > grade_points[current_smallest][0]:
                 current_smallest = key
             if usergrade.grade <= value[0] and value[0] < grade_points[current_biggest][0]:
+
                 current_biggest = key
+
         triple_completed_usergrade.append((usergrade, current_biggest, grade_points[current_biggest]))
-        gpa += grade_points[current_biggest][1] * usergrade.grade_for.credits
+
+        gpa += grade_points[current_smallest][1] * usergrade.grade_for.credits
         total_credits += usergrade.grade_for.credits
+
     gpa = gpa / total_credits
+    gpa = round(gpa,2)
     context_dict = {"list": triple_completed_usergrade, "gpa": gpa}
     return render(request, 'gradinator/gpa_calculator.html', context_dict)
 
