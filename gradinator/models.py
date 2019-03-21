@@ -13,7 +13,7 @@ class UserProfile(models.Model):
     # The additional attributes we wish to include.
     GPA = models.IntegerField(default=0)
     email = models.EmailField(default="", blank=True)
-    picture = models.ImageField(upload_to='profile_images', default='media/blank.png')
+    picture = models.ImageField(upload_to='profile_images')
 
     # Override the __unicode__() method to return out something meaningful!
     # Remember if you use Python 2.7.x, define __unicode__ too!
@@ -48,7 +48,7 @@ class Course(models.Model):
 
 class Coursework(models.Model):
     course = models.ForeignKey(Course, default="")
-    weight = models.FloatField(default=0,validators=[MaxValueValidator(100), MinValueValidator(1)])
+    weight = models.FloatField(default=0, validators=[MaxValueValidator(100), MinValueValidator(1)])
     name = models.CharField(max_length=30, default="", unique=True)
 
     slug = models.SlugField(default="")

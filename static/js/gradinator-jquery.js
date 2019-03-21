@@ -15,4 +15,11 @@ $(document).ready(function(){
     });
 
 
+       $(".hover").hover(function() {
+          $(this).animate({paddingLeft: '+=10px'}, 400);
+        }, function() {
+          $(this).animate({paddingLeft: '-=10px'}, 400);
+        });
+
+
 });

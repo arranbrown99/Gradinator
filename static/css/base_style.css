@@ -33,6 +33,10 @@ a {
   color: LightGray;
 }
 
+a:hover {
+  color: orange;
+}
+
 input[type=text]{
 	font-size:35px;
 	width:350px;
@@ -46,19 +50,26 @@ input[type=password]{
 }
 
 input[type=submit]{
-	font-size:25px;
+	font-size:15px;
 
 	font-weight: bold;
 	color:#2c2d30;
 	position:relative;
 }
 
+.logo1 img{
+	height: auto;
+    width: auto;
+    max-width: 750px;
+    max-height: 750px;
+}
+
 input[type=submit]:hover {
-  background-image: linear-gradient(#95adbd, #2b2f38);
+  background-color: #FFA500;
 }
 
 input[type=email]{
-	font-size:25px;
+	font-size:15px;
 	width:250px;
 	height:45px;
 
@@ -67,11 +78,15 @@ input[type=email]{
 }
 
 .predict_btn{
-	font-size:25px;
+	font-size:15px;
 	width:300px;
 	height:45px;
 	font-weight: bold;
 	color:#2c2d30;
 	position:relative;
+}
+
+.predict_btn:hover {
+  background-color: #FFA500;
 }
 
