@@ -28,7 +28,7 @@ SECRET_KEY = '+cl%fwwp!hpc_hi&rtf7-a4b-#n=twhp^6qqbcc8wt_0#!p$u1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['gradinator.pythonanywhere.com']
 
 # Application definition
 
