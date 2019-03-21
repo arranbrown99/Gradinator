@@ -3,12 +3,12 @@
 {% block title %} Band Calculator{% endblock %}
 
 {% block body_block %}
-<h1>Band Calculator</h1>
+
 <div>
-    <h5>{{course}}</h5>
+    <h1>Band Calculator - {{course}}</h1></div>
     {% for grade, bands in average_needed.items %}
     <button class="predict_btn " name={{forloop.counter}}
-            type="button">Predict bands for a {{grade}}
+            type="button">Predict bands for a{% if forloop.counter == 1 %}n{% endif %} {{grade}}
     </button>
     <div id="div{{forloop.counter}}">
         {% for band, needed_grade in bands.items %}
@@ -23,7 +23,7 @@
         {% endfor %}
     </div>
     {% endfor %}
-</div>
+
 
 <div><br><br>Not these are not indicative of the true bands by the end of the course and are just estimates</div>
 {% endblock %}
