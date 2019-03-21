@@ -131,9 +131,9 @@
 
 
             {% if user.is_authenticated %}
-            <ul>
-                <li class="main">
-                    <ul>
+
+                <div class="footer">
+
                         <a href="{% url 'about_us' %}">
                             About us
                         </a>
@@ -144,9 +144,9 @@
                         <a href="{% url 'faq' %}">
                             FAQ
                         </a>
-                    </ul>
-                </li>
-            </ul>
+
+                </div>
+
             {% endif %}
 
 
