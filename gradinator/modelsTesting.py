@@ -10,7 +10,7 @@ class UserProfileTests(TestCase):
     #     # print(validate_email(email))
     #
     #     user = User.objects.create_user(username=username, email=email, password=password)
-    #     return UserProfile.objects.get_or_from django.test import TestCasecreate(user=user, GPA=gpa, email=email)[0]
+    #     return UserProfile.objects.get_or_create(user=user, GPA=gpa, email=email)[0]
     #
     # def test_ensure_unique_username(self):
     #     user = UserProfileTests.create_test_user(self, 'User1', 21, 'example1@example1.com', 'password')
@@ -27,6 +27,7 @@ class UserProfileTests(TestCase):
     #         print("pass")
 
     def create_test_user(self, username, gpa, email, password):
+        
         pass
 
     def test_unique_email(self):
