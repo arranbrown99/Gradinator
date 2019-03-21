@@ -17,8 +17,6 @@ from gradinator.forms import UserProfileForm
 from gradinator.forms import UserGradeForm
 from gradinator.forms import UserCourseworkGradeForm
 
-from gradinator.webhose_search import run_query
-
 
 # Create your views here.
 @login_required
@@ -130,15 +128,6 @@ def enrol(request, course_name_slug=""):
 
     context_dict['form'] = form
 
-    # functionality to search for a course not tested yet
-    # result_list = []
-    # if request.method == 'POST':
-    #     query = request.POST['query'].strip()
-    #     if query:
-    #         # Run our Webhose search function to get the results list!
-    #         result_list = run_query(query)
-    # context_dict['result_list'] = result_list
-
     return render(request, 'gradinator/enrol.html', context_dict)
 
 
@@ -249,7 +238,7 @@ def band_calculator_slug(request, course_name_slug):
                 total_usersgrade += coursework.grade * coursework.grade_for.weight / 100
 
             average_needed = (grade - total_usersgrade) * 100 / remaining_weight
-            average_needed = round(average_needed,2)
+            average_needed = round(average_needed, 2)
             context_dict["average_needed"][string_grade][band] = average_needed
     context_dict["course"] = course
 
@@ -284,6 +273,7 @@ def add_user_coursework(request):
 
 
 def add_coursework_form(request, coursework_slug):
+    # a form that creates a UserCourseWork grade model object
     form = UserCourseworkGradeForm()
     if request.method == 'POST':
         form = UserCourseworkGradeForm(request.POST, request.FILES)
@@ -305,7 +295,7 @@ def add_coursework_form(request, coursework_slug):
 
 @login_required
 def gpa_calculator(request):
-    # calculates the gpa
+    # calculates the gpa using grade points
 
     list_completed_usergrade = load_usergrade(request)
     grade_points = {"A1": (92, 22), "A2": (85, 21), "A3": (79, 20), "A4": (74, 19), "A5": (70, 18),
@@ -329,17 +319,18 @@ def gpa_calculator(request):
             if usergrade.grade >= value[0] and value[0] > grade_points[current_smallest][0]:
                 current_smallest = key
             if usergrade.grade <= value[0] and value[0] < grade_points[current_biggest][0]:
-
                 current_biggest = key
 
         triple_completed_usergrade.append((usergrade, current_biggest, grade_points[current_biggest]))
 
         gpa += grade_points[current_smallest][1] * usergrade.grade_for.credits
         total_credits += usergrade.grade_for.credits
-
-    gpa = gpa / total_credits
-    gpa = round(gpa,2)
-    context_dict = {"list": triple_completed_usergrade, "gpa": gpa}
+    if total_credits == 0:
+        context_dict = {"list": None, "gpa": None}
+    else:
+        gpa = gpa / total_credits
+        gpa = round(gpa, 2)
+        context_dict = {"list": triple_completed_usergrade, "gpa": gpa}
     return render(request, 'gradinator/gpa_calculator.html', context_dict)
 
 
@@ -357,6 +348,7 @@ def create_user_profile():
 
 @login_required
 def register_profile(request):
+    # adds a new user
     create_user_profile()
     form = UserProfileForm()
     if request.method == 'POST':

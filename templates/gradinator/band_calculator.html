@@ -3,9 +3,9 @@
 {% block title %} Band Calculator{% endblock %}
 
 {% block body_block %}
-<h3>Band Calculator</h3>
+<h1>Band Calculator</h1>
 <div>
-    Given what you got in each peice coursework so far click the button to predict what you need to get in the remaining
+    For each course you are enrolled in, that is not completed so far, click the button to predict what you need to get in the remaining
     coursework for each band.<br>
 
     Only shows courses you are enrolled in and have unfinished coursework for.
@@ -31,7 +31,7 @@
         {% endfor %}
 
 
-                <form action="/gradinator/band_calculator/{{course.slug}}/">
+                <form action="{% url /band_calculator/{{course.slug}}/">
                 <input type="submit" value= "Predict bands for {{course}}"/>
             </form>
 

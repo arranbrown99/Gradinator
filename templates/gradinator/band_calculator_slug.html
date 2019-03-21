@@ -14,7 +14,7 @@
         {% for band, needed_grade in bands.items %}
 
         {% if needed_grade < 100 and needed_grade > 0%}
-        <p class="to_be_hidden p{{forloop.parentloop.counter}}">To get a {{band}} you will need at an average of {{needed_grade}}% in each
+        <p class="to_be_hidden p{{forloop.parentloop.counter}}">To get a{% if forloop.parentloop.counter == 1 %}n{% endif %} {{band}} you will need at an average of {{needed_grade}}% in each
             remaining
             piece of coursework.</p>
 

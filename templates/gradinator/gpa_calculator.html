@@ -3,24 +3,31 @@
 {% block title %} GPA Calculator {% endblock %}
 {% block body_block %}
     <h1>GPA Calculator</h1>
-    <button class="predict_btn " name=gpa_btn
-            type="button">Calculate GPA
-    </button>
-    <div id="divgpa_btn">
+    Courses will only be included in your GPA if you have inputed a result for every peice of coursework for that course
+    {% if not gpa %}
+        <div>
+        You have not completed any course yet<br>
+        Head on over to enrol to add your courses then after that go to add user courework to add your results for all completed courseswork
+        </div>
+    {% else %}
+        <button class="predict_btn " name=gpa_btn
+                type="button">Calculate GPA
+        </button>
+        <div id="divgpa_btn">
 
-        <p class="to_be_hidden pgpa_btn"> {{gpa}}</p>
+            <p class="to_be_hidden pgpa_btn"> {{gpa}}</p>
 
-        <br>
+            <br>
 
-    </div>
+        </div>
 
-    <div> In each course your final grade is</div>
-    <ul>
-	{% for UserGrade in list %}
-        <li>
-        {{UserGrade.0.grade_for}} - {{UserGrade.0.grade}}% - {{UserGrade.0.grade_for.credits}} credits - Band {{UserGrade.1}} - Grade Point {{UserGrade.2.1}}
-        </li>
-    {% endfor %}
-    </ul>
-
+        <div> In each course your final grade is</div>
+        <ul>
+        {% for UserGrade in list %}
+            <li>
+            {{UserGrade.0.grade_for}} - {{UserGrade.0.grade}}% - {{UserGrade.0.grade_for.credits}} credits - Band {{UserGrade.1}} - Grade Point {{UserGrade.2.1}}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
 {% endblock %}

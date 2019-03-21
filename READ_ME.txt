@@ -17,12 +17,9 @@ python manage.py runserver
 
 
 
-What still needs done? 18/03/2018 16.45
+What still needs done? 21/03/2018 10.42
 
-GPA calculator
-Band calculator
 make the website look decent
-populate script
 unit tests
 search functionality
 slides for the presentation
