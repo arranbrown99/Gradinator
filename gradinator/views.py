@@ -312,9 +312,9 @@ def gpa_calculator(request):
         current_smallest = "CW"
         for key, value in grade_points.items():
             number = usergrade.grade
-            if usergrade.grade >= value[0] and value[0] > grade_points[current_smallest][0]:
+            if usergrade.grade >= value[0] > grade_points[current_smallest][0]:
                 current_smallest = key
-            if usergrade.grade <= value[0] and value[0] < grade_points[current_biggest][0]:
+            if usergrade.grade <= value[0] < grade_points[current_biggest][0]:
                 current_biggest = key
 
         triple_completed_usergrade.append((usergrade, current_biggest, grade_points[current_biggest]))

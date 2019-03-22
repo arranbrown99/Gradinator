@@ -7,6 +7,9 @@
         <form id=coursework_submission method="post" action="/gradinator/add_coursework_form/{{ coursework }}/"
               enctype="multipart/form-data">
             {% csrf_token %}
+            <img src="{{ MEDIA_ROOT }}/static/images/Annotation%202019-03-22%20012424.jpg"
+                 width="1200"
+                 height="400"/><br><br>
             {% for field in form %}
                 {{ field.errors }}
                 {{ field.help_text }} {{ coursework }}

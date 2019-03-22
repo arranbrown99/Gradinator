@@ -69,7 +69,7 @@ class UserGrade(models.Model):
     grade_for = models.ForeignKey(Course)
     sat_by = models.ForeignKey(UserProfile)
 
-    grade = models.IntegerField(default=0, validators=[MaxValueValidator(100), MinValueValidator(0)])
+    grade = models.FloatField(default=0, validators=[MaxValueValidator(100), MinValueValidator(0)])
 
     class Meta:
         unique_together = ('grade_for', 'sat_by')
@@ -80,7 +80,7 @@ class UserCourseworkGrade(models.Model):
     grade_for = models.ForeignKey(Coursework)
     sat_by = models.ForeignKey(UserProfile)
 
-    grade = models.IntegerField(validators=[MaxValueValidator(100), MinValueValidator(0)])
+    grade = models.FloatField(validators=[MaxValueValidator(100), MinValueValidator(0)])
 
     class Meta:
         unique_together = ('grade_for', 'sat_by')

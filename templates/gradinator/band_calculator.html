@@ -13,6 +13,7 @@
     </div>
     <div>
         <br>
+
         {% if not not_enrolled %}
             No course to show! <br>
             Head on over to enrol to add your courses and add user coursework to add your coursework
@@ -27,7 +28,7 @@
                     {% for coursework in list_coursework %}
                         <li>
 
-                            {{ coursework.grade_for }} - {{ coursework.grade }}%<br>
+                            {{ coursework.grade_for }} - {{ coursework.grade }}
                         </li>
                     {% endfor %}
 
@@ -41,5 +42,6 @@
 
 
         {% endfor %}
+
     </div>
 {% endblock %}
