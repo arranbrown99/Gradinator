@@ -305,7 +305,7 @@ def gpa_calculator(request):
 
     # calculates the grade point for a given grade
     # and the GPA
-    gpa = 0
+    gpa = 0.0
     total_credits = 0
     for usergrade in list_completed_usergrade:
         current_biggest = "A1"
@@ -316,7 +316,7 @@ def gpa_calculator(request):
             if usergrade.grade <= value[0] < grade_points[current_biggest][0]:
                 current_biggest = key
 
-        triple_completed_usergrade.append((usergrade, current_biggest, grade_points[current_biggest]))
+        triple_completed_usergrade.append((usergrade, current_smallest, grade_points[current_smallest]))
 
         gpa += grade_points[current_smallest][1] * usergrade.grade_for.credits
         total_credits += usergrade.grade_for.credits
@@ -324,7 +324,7 @@ def gpa_calculator(request):
         context_dict = {"list": None, "gpa": None}
     else:
         gpa = gpa / total_credits
-        gpa = round(gpa, 2) + 1
+        gpa = round(gpa, 2)
         context_dict = {"list": triple_completed_usergrade, "gpa": gpa}
     return render(request, 'gradinator/gpa_calculator.html', context_dict)
 
