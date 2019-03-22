@@ -1,21 +1,17 @@
-from django.utils.safestring import mark_safe
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 
-import json
-from gradinator.models import UserGrade
-from gradinator.models import UserProfile
+from gradinator.forms import UserCourseworkGradeForm
+from gradinator.forms import UserGradeForm
+from gradinator.forms import UserProfileForm
 from gradinator.models import Course
 from gradinator.models import Coursework
 from gradinator.models import UserCourseworkGrade
-
-from gradinator.forms import UserProfileForm
-from gradinator.forms import UserGradeForm
-from gradinator.forms import UserCourseworkGradeForm
+from gradinator.models import UserGrade
+from gradinator.models import UserProfile
 
 
 # Create your views here.

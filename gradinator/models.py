@@ -1,8 +1,7 @@
-from django.db import models
-from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 from django.core.validators import MaxValueValidator, MinValueValidator
-
+from django.db import models
+from django.template.defaultfilters import slugify
 
 # Create your models here.
 
@@ -12,7 +11,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True)
     # The additional attributes we wish to include.
     GPA = models.IntegerField(default=0)
-    email = models.EmailField(default="", blank=True)
+    email = models.EmailField(default="", blank=True, )
     picture = models.ImageField(upload_to='profile_images', default='media/blank.png')
 
     # Override the __unicode__() method to return out something meaningful!
@@ -26,8 +25,8 @@ class Course(models.Model):
     taught_by = models.CharField(max_length=30)
     description = models.CharField(max_length=1000, default="")
     requirements_of_entry = models.TextField(default="")
-    credits = models.IntegerField(default=0)
-    year = models.IntegerField(default=0)
+    credits = models.IntegerField(default=0, validators=[MaxValueValidator(100), MinValueValidator(0)])
+    year = models.IntegerField(default=1, validators=[MaxValueValidator(4), MinValueValidator(1)])
     school = models.CharField(max_length=30)
     name = models.CharField(max_length=30)
     url = models.URLField(max_length=250, default="")
@@ -48,7 +47,7 @@ class Course(models.Model):
 
 class Coursework(models.Model):
     course = models.ForeignKey(Course, default="")
-    weight = models.FloatField(default=0,validators=[MaxValueValidator(100), MinValueValidator(1)])
+    weight = models.FloatField(default=0, validators=[MaxValueValidator(100), MinValueValidator(1)])
     name = models.CharField(max_length=30, default="", unique=True)
 
     slug = models.SlugField(default="")

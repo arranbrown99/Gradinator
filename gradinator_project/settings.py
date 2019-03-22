@@ -42,8 +42,6 @@ INSTALLED_APPS = [
     'gradinator',
     'registration',
 
-
-
 ]
 
 # If True, users can register

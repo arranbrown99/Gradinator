@@ -2,19 +2,20 @@
 {% load staticfiles %}
 {% block title %} Band Calculator {% endblock %}
 {% block body_block %}
-<div>
+    <div>
 
-	<form id=coursework_submission method="post" action="/gradinator/add_coursework_form/{{coursework}}/" enctype="multipart/form-data">
-		{% csrf_token %}
-		{% for field in form %}
-			{{ field.errors }}
-			{{ field.help_text }} {{coursework}}
-			{{ field }}
-		{% endfor %}
-		%<br>
+        <form id=coursework_submission method="post" action="/gradinator/add_coursework_form/{{ coursework }}/"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                {{ field.errors }}
+                {{ field.help_text }} {{ coursework }}
+                {{ field }}
+            {% endfor %}
+            %<br>
 
-		<input type="submit" value="Submit">
-	</form>
+            <input type="submit" value="Submit">
+        </form>
 
-</div>
+    </div>
 {% endblock %}

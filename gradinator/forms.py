@@ -1,8 +1,8 @@
 from django import forms
 
-from gradinator.models import UserProfile
-from gradinator.models import UserGrade
 from gradinator.models import UserCourseworkGrade
+from gradinator.models import UserGrade
+from gradinator.models import UserProfile
 
 
 class UserProfileForm(forms.ModelForm):

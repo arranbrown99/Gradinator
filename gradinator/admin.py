@@ -1,9 +1,10 @@
 from django.contrib import admin
-from gradinator.models import UserGrade
-from gradinator.models import UserProfile
+
 from gradinator.models import Course
 from gradinator.models import Coursework
 from gradinator.models import UserCourseworkGrade
+from gradinator.models import UserGrade
+from gradinator.models import UserProfile
 
 
 class CourseAdmin(admin.ModelAdmin):
@@ -27,4 +28,4 @@ admin.site.register(Coursework, CourseworkAdmin)
 
 admin.site.register(UserProfile)
 admin.site.register(UserGrade, UserGradeAdmin)
-admin.site.register(UserCourseworkGrade,UserCourseworkGradeAdmin)
+admin.site.register(UserCourseworkGrade, UserCourseworkGradeAdmin)

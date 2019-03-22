@@ -10,7 +10,7 @@
   initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    
+
     <title>
         Gradinator - {% block title %}Calculate your grade{% endblock %}
     </title>
@@ -50,66 +50,66 @@
             {% if user.is_authenticated %}
 
 
-            <a class="nav-link" href="{% url 'account' user.username %}">
-                Account
-            </a>
-            </li>
-            <li class="nav-item">
-
-                <a class="nav-link" href="{% url 'my_courses' %}">
-                    My Courses
+                <a class="nav-link" href="{% url 'account' user.username %}">
+                    Account
                 </a>
+                </li>
+                <li class="nav-item">
 
-            </li>
+                    <a class="nav-link" href="{% url 'my_courses' %}">
+                        My Courses
+                    </a>
 
-            <li class="nav-item">
+                </li>
 
-                <a class="nav-link" href="{% url 'band_calculator' %}">
-                    Band Calculator
-                </a>
+                <li class="nav-item">
 
-            </li>
+                    <a class="nav-link" href="{% url 'band_calculator' %}">
+                        Band Calculator
+                    </a>
 
-            <li class="nav-item">
+                </li>
 
-                <a class="nav-link" href="{% url 'add_user_coursework' %}">
-                    Add User Coursework
-                </a>
+                <li class="nav-item">
 
-            </li>
+                    <a class="nav-link" href="{% url 'add_user_coursework' %}">
+                        Add User Coursework
+                    </a>
+
+                </li>
 
 
-            <li class="nav-item">
+                <li class="nav-item">
 
-                <a class="nav-link" href="{% url 'gpa_calculator' %}">
-                    GPA Calculator
-                </a>
+                    <a class="nav-link" href="{% url 'gpa_calculator' %}">
+                        GPA Calculator
+                    </a>
 
-            </li>
+                </li>
 
-            <li class="nav-item">
+                <li class="nav-item">
 
-                <a class="nav-link" href="{% url 'enrol' %}">
-                    Enrol
-                </a>
+                    <a class="nav-link" href="{% url 'enrol' %}">
+                        Enrol
+                    </a>
 
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'auth_logout' %}?next=/gradinator/">
-                    Logout
-                </a>
-            </li>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'auth_logout' %}?next=/gradinator/">
+                        Logout
+                    </a>
+                </li>
             {% else %}
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'registration_register' %}">
-                    Register Here
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'auth_login' %}">
-                    Login
-                </a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'registration_register' %}">
+                        Register Here
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'auth_login' %}">
+                        Login
+                    </a>
+                </li>
             {% endif %}
         </ul>
     </div>
@@ -131,19 +131,19 @@
 
 
             {% if user.is_authenticated %}
-            <footer>
+                <footer>
                 <div class="footer">
 
-                        <a href="{% url 'about_us' %}">
-                            About us
-                        </a>
-                        <a href="{% url 'contact_us' %}">
-                            Contact us
-                        </a>
+                    <a href="{% url 'about_us' %}">
+                        About us
+                    </a>
+                    <a href="{% url 'contact_us' %}">
+                        Contact us
+                    </a>
 
-                        <a href="{% url 'faq' %}">
-                            FAQ
-                        </a>
+                    <a href="{% url 'faq' %}">
+                        FAQ
+                    </a>
 
                 </div>
 

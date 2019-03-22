@@ -4,26 +4,28 @@
 
 {% block body_block %}
 
-<div>
-    <h1>Band Calculator - {{course}}</h1></div>
+    <div>
+        <h1>Band Calculator - {{ course }}</h1></div>
     {% for grade, bands in average_needed.items %}
-    <button class="predict_btn " name={{forloop.counter}}
-            type="button">Predict bands for a{% if forloop.counter == 1 %}n{% endif %} {{grade}}
-    </button>
-    <div id="div{{forloop.counter}}">
-        {% for band, needed_grade in bands.items %}
+        <button class="predict_btn " name={{ forloop.counter }}
+                type="button">Predict bands for a{% if forloop.counter == 1 %}n{% endif %} {{ grade }}
+        </button>
+        <div id="div{{ forloop.counter }}">
+            {% for band, needed_grade in bands.items %}
 
-        {% if needed_grade < 100 and needed_grade > 0%}
-        <p class="to_be_hidden p{{forloop.parentloop.counter}}">To get a{% if forloop.parentloop.counter == 1 %}n{% endif %} {{band}} you will need at an average of {{needed_grade}}% in each
-            remaining
-            piece of coursework.</p>
+                {% if needed_grade < 100 and needed_grade > 0 %}
+                    <p class="to_be_hidden p{{ forloop.parentloop.counter }}">To get a
+                        {% if forloop.parentloop.counter == 1 %}n{% endif %} {{ band }} you will need at an average
+                        of {{ needed_grade }}% in each
+                        remaining
+                        piece of coursework.</p>
 
-        <br>
-        {% endif %}
-        {% endfor %}
-    </div>
+                    <br>
+                {% endif %}
+            {% endfor %}
+        </div>
     {% endfor %}
 
 
-<div><br><br>Not these are not indicative of the true bands by the end of the course and are just estimates</div>
+    <div><br><br>Not these are not indicative of the true bands by the end of the course and are just estimates</div>
 {% endblock %}

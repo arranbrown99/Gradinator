@@ -72,4 +72,3 @@ class ModelTests(TestCase):
         self.assertEqual(course.year, 2)
         self.assertEqual(course.credits, 10)
 class ViewsTests(TestCase):
-    def 
