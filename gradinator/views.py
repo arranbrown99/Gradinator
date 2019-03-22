@@ -234,7 +234,7 @@ def band_calculator_slug(request, course_name_slug):
                 total_usersgrade += coursework.grade * coursework.grade_for.weight / 100
 
             average_needed = (grade - total_usersgrade) * 100 / remaining_weight
-            average_needed = round(average_needed, 2)
+            average_needed = round(average_needed)
             context_dict["average_needed"][string_grade][band] = average_needed
     context_dict["course"] = course
 
