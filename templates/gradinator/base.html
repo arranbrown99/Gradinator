@@ -44,7 +44,7 @@
     <a class="navbar-brand" href="{% url 'home' %}">Gradinator</a>
     <div class="collapse navbar-collapse" id="navbar">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+        <li class="nav-item active">
 
             </li>
             {% if user.is_authenticated %}
@@ -116,16 +116,12 @@
 </nav>
 
 <div style="height:10px; width:100%"></div>
+<div class="container-fluid" >
 
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-            {% block sidebar_block %}
+    <div class="row" >
 
-            {% endblock %}
-        </div>
 
-        <div class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 main">
+        <div class="col-sm-9  col-md-10  main">
             {% block body_block %}
             {% endblock %}
 
@@ -148,12 +144,11 @@
                 </div>
 
             {% endif %}
-            <footer>
+            </footer>
+</div>
 
         </div>
-
     </div>
-</div>
 
 <!-- Bootstrap core JavaScript
   ================================================== -->

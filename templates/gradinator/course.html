@@ -1,28 +1,24 @@
 {% extends 'gradinator/base.html' %}
 {% load staticfiles %}
-{% block title %} <style>
+{% block title %}
+    <style>
 
-</style>{{ course.name }} {% endblock %}
+    </style>{{ course.name }} {% endblock %}
 {% block body_block %}
     {% if course %}
         <h1>{{ course.name }}</h1>
 
-        {{ course.id }}<br>
-        {{ course.school }}<br>
-
+        ID: {{ course.id }}<br>
+        School: {{ course.school }}<br>
         <h3>Taught By</h3>
-        {{ course.taught_by }}<br>
-
+        {{ course.taught_by }}
         <h3>Description</h3>
-        {{ course.description }}<br>
-
+        {{ course.description }}
         <h3>Requirements of Entry</h3>
         {{ course.requirements_of_entry }}<br>
-        <h5>Course credits:</h5>
 
-        {{ course.credits }} credits
-        <h5>Year of Study:</h5>
-        {{ course.year }} year <br>
+
+
 
         <h5>Coursework:</h5>
         <ul>
@@ -33,6 +29,8 @@
 
             {% endfor %}
         </ul>
+        Course credits: {{ course.credits }} credits
+        <br>Year of Study: {{ course.year }}<br>
 
         <a href="{{ course.url }}">MyGlasgow Link </a>
 
