@@ -50,10 +50,10 @@ def populate():
          "weight": 0.8},
     ]
     ads_coursework = [
-        {"name": "ads assessed exercise1",
+        {"name": "ads assessed exercise 1",
          "course": "ads",
          "weight": 0.1},
-        {"name": "ads assessed exercise2",
+        {"name": "ads assessed exercise 2",
          "course": "ads",
          "weight": 0.1},
         {"name": "ads exam",
@@ -61,10 +61,10 @@ def populate():
          "weight": 0.8},
     ]
     nose_coursework = [
-        {"name": "nose assessed exercise1",
+        {"name": "nose assessed exercise 1",
          "course": "nose",
          "weight": 0.1},
-        {"name": "nose assessed exercise2",
+        {"name": "nose assessed exercise 2",
          "course": "nose",
          "weight": 0.1},
         {"name": "nose exam",
@@ -72,10 +72,10 @@ def populate():
          "weight": 0.8},
     ]
     af_coursework = [
-        {"name": "af2 assessed exercise1",
+        {"name": "af2 assessed exercise 1",
          "course": "af",
          "weight": 0.1},
-        {"name": "af2 assessed exercise2",
+        {"name": "af2 assessed exercise 2",
          "course": "af",
          "weight": 0.1},
         {"name": "af2 exam",
@@ -194,8 +194,8 @@ def populate():
 
     # Print out the courses we have added.
     for c in Course.objects.all():
-        for cw in Coursework.objects.filter(course=c): \
-                print("- {0} - {1}".format(str(c), str(cw)))
+        for cw in Coursework.objects.filter(course=c):
+            print("- {0} - {1}".format(str(c), str(cw)))
 
 
 def add_coursework(course, name, weight):
@@ -205,6 +205,20 @@ def add_coursework(course, name, weight):
     cw.weight = weight * 100
     cw.save()
     return cw
+
+
+# for testing mostly
+def add_course_and_coursework(course, coursework, name):
+    c = add_course(course[name]["name"], course[name]["id"], course[name]["url"], course[name]["taught_by"],
+                   course[name]["description"],
+                   course[name]["requirements_of_entry"], course[name]["credits"], course[name]["year"],
+                   course[name]["school"])
+
+    if coursework == course[name]["coursework"]:
+        for this in coursework:
+            add_coursework(c, this["name"], this["weight"])
+
+    return c
 
 
 def add_course(name, id, url, taught_by, description,

@@ -3,42 +3,45 @@
 {% block title %} Band Calculator{% endblock %}
 
 {% block body_block %}
-<h1>Band Calculator</h1>
-<div>
-    For each course you are enrolled in, that is not completed so far, click the button to predict what you need to get in the remaining
-    coursework for each band.<br>
+    <h1>Band Calculator</h1>
+    <div>
+        For each course you are enrolled in, that is not completed so far, click the button to predict what you need to
+        get in the remaining
+        coursework for each band.<br>
 
-    Only shows courses you are enrolled in and have unfinished coursework for.
-</div>
-<div>
-    <br>
-    {% if not not_enrolled %}
-    No course to show! <br>
-    Head on over to enrol to add your courses and add user coursework to add your coursework
-    {% endif %}
-    {% for course, list_coursework in not_enrolled.items %}
+        Only shows courses you are enrolled in and have unfinished coursework for.
+    </div>
+    <div>
+        <br>
 
-    {% if list_coursework %}
-    <h4>{{course}}</h4>
+        {% if not not_enrolled %}
+            No course to show! <br>
+            Head on over to enrol to add your courses and add user coursework to add your coursework
+        {% endif %}
+        {% for course, list_coursework in not_enrolled.items %}
 
-    <ul>
+            {% if list_coursework %}
+                <h4>{{ course }}</h4>
 
-        {% for coursework in list_coursework %}
-        <li>
+                <ul>
 
-            {{coursework.grade_for}} - {{coursework.grade}}%<br>
-        </li>
+                    {% for coursework in list_coursework %}
+                        <li>
+
+                            {{ coursework.grade_for }} - {{ coursework.grade }}
+                        </li>
+                    {% endfor %}
+
+
+                    <form action="gradinator/band_calculator/{{ course.slug }}/">
+                        <input type="submit" value="Predict bands for {{ course }}"/>
+                    </form>
+
+                </ul>
+            {% endif %}
+
+
         {% endfor %}
 
-
-                <form action="gradinator/band_calculator/{{course.slug}}/">
-                <input type="submit" value= "Predict bands for {{course}}"/>
-            </form>
-
-    </ul>
-    {% endif %}
-
-
-    {% endfor %}
-</div>
+    </div>
 {% endblock %}

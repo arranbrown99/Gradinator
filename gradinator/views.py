@@ -1,21 +1,17 @@
-from django.utils.safestring import mark_safe
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 
-import json
-from gradinator.models import UserGrade
-from gradinator.models import UserProfile
+from gradinator.forms import UserCourseworkGradeForm
+from gradinator.forms import UserGradeForm
+from gradinator.forms import UserProfileForm
 from gradinator.models import Course
 from gradinator.models import Coursework
 from gradinator.models import UserCourseworkGrade
-
-from gradinator.forms import UserProfileForm
-from gradinator.forms import UserGradeForm
-from gradinator.forms import UserCourseworkGradeForm
+from gradinator.models import UserGrade
+from gradinator.models import UserProfile
 
 
 # Create your views here.
@@ -238,7 +234,7 @@ def band_calculator_slug(request, course_name_slug):
                 total_usersgrade += coursework.grade * coursework.grade_for.weight / 100
 
             average_needed = (grade - total_usersgrade) * 100 / remaining_weight
-            average_needed = round(average_needed, 2)
+            average_needed = round(average_needed)
             context_dict["average_needed"][string_grade][band] = average_needed
     context_dict["course"] = course
 
@@ -315,10 +311,9 @@ def gpa_calculator(request):
         current_biggest = "A1"
         current_smallest = "CW"
         for key, value in grade_points.items():
-            number = usergrade.grade
-            if usergrade.grade >= value[0] and value[0] > grade_points[current_smallest][0]:
+            if usergrade.grade >= value[0] > grade_points[current_smallest][0]:
                 current_smallest = key
-            if usergrade.grade <= value[0] and value[0] < grade_points[current_biggest][0]:
+            if usergrade.grade <= value[0] < grade_points[current_biggest][0]:
                 current_biggest = key
 
         triple_completed_usergrade.append((usergrade, current_biggest, grade_points[current_biggest]))

@@ -4,18 +4,18 @@
 {% block body_block %}
 
 
-	<div class="square-container">
-		<div class="center square">
-		<div class="inside_text"><h1>Login</h1>
-			<form method="post" action=".">
-				{% csrf_token %}
-				<div class="credentials_text">{{ form.as_p }}</div>
-				<input type="submit" value="LOGIN" />
-				<input type="hidden" name="next" value="{{ next }}" />
-			</form>
-			<p id="login">Not a member? <a href="{% url 'registration_register' %}">Register Here</a></p>
-	{% endblock %}
-		</div>
-	</div>
+    <div class="square-container">
+    <div class="center square">
+    <div class="inside_text"><h1>Login</h1>
+    <form method="post" action=".">
+        {% csrf_token %}
+        <div class="credentials_text">{{ form.as_p }}</div>
+        <input type="submit" value="LOGIN"/>
+        <input type="hidden" name="next" value="{{ next }}"/>
+    </form>
+    <p id="login">Not a member? <a href="{% url 'registration_register' %}">Register Here</a></p>
+{% endblock %}
+</div>
+</div>
 
 

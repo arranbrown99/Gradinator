@@ -10,7 +10,7 @@
   initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    
+
     <title>
         Gradinator - {% block title %}Calculate your grade{% endblock %}
     </title>
@@ -41,7 +41,8 @@
             aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'images/logo_small.png' %}" alt="gradinator logo" height="40px" width="140px"></a>
+    <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'images/logo_small.png' %}"
+                                                         alt="gradinator logo" height="40px" width="140px"></a>
     <div class="collapse navbar-collapse" id="navbar">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
@@ -50,17 +51,15 @@
             {% if user.is_authenticated %}
 
             <li>
-            <a class="nav-link" href="{% url 'account' user.username %}">
-                Account
-            </a>
+                <a class="nav-link" href="{% url 'account' user.username %}">
+                    Account
+                </a>
             </li>
             <li class="nav-item">
 
                 <a class="nav-link" href="{% url 'my_courses' %}">
                     My Courses
                 </a>
-
-            </li>
 
             <li class="nav-item">
 
@@ -116,16 +115,12 @@
 </nav>
 
 <div style="height:10px; width:100%"></div>
-
 <div class="container-fluid">
+
     <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-            {% block sidebar_block %}
 
-            {% endblock %}
-        </div>
 
-        <div class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 main">
+        <div class="col-sm-9  col-md-10  main">
             {% block body_block %}
             {% endblock %}
 
@@ -134,16 +129,16 @@
             <footer>
                 <div class="footer">
 
-                        <a href="{% url 'about_us' %}">
-                            About us
-                        </a>
-                        <a href="{% url 'contact_us' %}">
-                            Contact us
-                        </a>
+                    <a href="{% url 'about_us' %}">
+                        About us
+                    </a>
+                    <a href="{% url 'contact_us' %}">
+                        Contact us
+                    </a>
 
-                        <a href="{% url 'faq' %}">
-                            FAQ
-                        </a>
+                    <a href="{% url 'faq' %}">
+                        FAQ
+                    </a>
 
                 </div>
 
@@ -152,6 +147,7 @@
             {% endif %}
 
         </div>
+
 
     </div>
 </div>

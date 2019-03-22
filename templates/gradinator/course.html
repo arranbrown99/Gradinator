@@ -1,38 +1,40 @@
 {% extends 'gradinator/base.html' %}
 {% load staticfiles %}
-{% block title %} {{ course.name }} {% endblock %}
+{% block title %}
+    <style>
+
+    </style>{{ course.name }} {% endblock %}
 {% block body_block %}
-	{% if course %}
-		<h1>{{ course.name }}</h1>
+    {% if course %}
+        <h1>{{ course.name }}</h1>
 
-		{{ course.id }}<br>
-		{{ course.school }}<br>
+        ID: {{ course.id }}<br>
+        School: {{ course.school }}<br>
+        <h3>Taught By</h3>
+        {{ course.taught_by }}
+        <h3>Description</h3>
+        {{ course.description }}
+        <h3>Requirements of Entry</h3>
+        {{ course.requirements_of_entry }}<br>
 
-		<h3>Taught By</h3>
-		{{ course.taught_by }}<br>
-		
-		<h3>Description</h3>
-		{{ course.description }}<br>
-		
-		<h3>Requirements of Entry</h3>
-		{{ course.requirements_of_entry }}<br><br>
 
-		{{ course.credits }} credits<br>
-		{{ course.year }} year <br><br>
 
-		<h3>Coursework</h3>
-		<ul>
-		{% for cw in coursework %}
-			<li>
-				{{cw.name}}	{{cw.weight}}
-			</li>
-			
-		{% endfor %}
-		</ul>
 
-		<a href="{{course.url}}">MyGlasgow Link </a>
+        <h5>Coursework:</h5>
+        <ul>
+            {% for cw in coursework %}
+                <li>
+                    {{ cw.name }} {{ cw.weight }}
+                </li>
 
-	{% else %}
-		The specified course does not exist!
-	{% endif %}
+            {% endfor %}
+        </ul>
+        Course credits: {{ course.credits }} credits
+        <br>Year of Study: {{ course.year }}<br>
+
+        <a href="{{ course.url }}">MyGlasgow Link </a>
+
+    {% else %}
+        The specified course does not exist!
+    {% endif %}
 {% endblock %}

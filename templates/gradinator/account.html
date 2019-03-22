@@ -3,7 +3,8 @@
 {% block title %}{{ selecteduser.username }} Account{% endblock %}
 
 {% block body_block %}
-<h1>Account</h1>
+
+<h1>{{ selecteduser.username }}'s Account</h1>
 {% if userprofile.picture %}
 <img src="{{ MEDIA_URL }}{{userprofile.picture }}"
 width="300"
@@ -11,22 +12,21 @@ height="300"
 alt="{{selecteduser.username}}" />
 {% endif %}
 
+    <br/><br>
+    <div>
+        {% if selecteduser.username == user.username %}
 
-<br/><br>
-<div>
-	{% if selecteduser.username == user.username %}
+            <form method="post" action="." enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type="submit" value="Update"/>
+            </form>
 
-	<form method="post" action="." enctype="multipart/form-data">
-		{% csrf_token %}
-		{{ form.as_p }}
-		<input type="submit" value="Update" />
-	</form>
-
-	{% else %}
-	<p><strong>Email:</strong> <a href="{{userprofile.email}}">
-	{{userprofile.email}}</a></p>
-	{% endif %}
-</div>
-<div id="edit_account"></div>
+        {% else %}
+            <p><strong>Email:</strong> <a href="{{ userprofile.email }}">
+                {{ userprofile.email }}</a></p>
+        {% endif %}
+    </div>
+    <div id="edit_account"></div>
 
 {% endblock %}
