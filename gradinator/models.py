@@ -84,5 +84,6 @@ class UserCourseworkGrade(models.Model):
 
     grade = models.FloatField(validators=[MaxValueValidator(100), MinValueValidator(0)])
 
+
     class Meta:
         unique_together = ('grade_for', 'sat_by')

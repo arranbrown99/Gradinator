@@ -231,7 +231,7 @@ def band_calculator_slug(request, course_name_slug):
         for band, grade in dict_grades.items():
             total_usersgrade = 0
             for coursework in list_coursework:
-                total_usersgrade += coursework.grade * coursework.grade_for.weight / 100
+                total_usersgrade = round(total_usersgrade + coursework.grade * coursework.grade_for.weight / 100, 2)
 
             average_needed = (grade - total_usersgrade) * 100 / remaining_weight
             average_needed = round(average_needed)
@@ -324,7 +324,7 @@ def gpa_calculator(request):
         context_dict = {"list": None, "gpa": None}
     else:
         gpa = gpa / total_credits
-        gpa = round(gpa, 2)
+        gpa = round(gpa, 2) + 1
         context_dict = {"list": triple_completed_usergrade, "gpa": gpa}
     return render(request, 'gradinator/gpa_calculator.html', context_dict)
 
@@ -386,7 +386,7 @@ def load_usergrade(request):
             for coursework in list_coursework:
                 total_coursework_grade += (coursework.grade * coursework.grade_for.weight / 100)
 
-            user_course.grade = total_coursework_grade
+            user_course.grade = round(total_coursework_grade, 2)
             user_course.save()
             completed_user_courses.append(user_course)
 
