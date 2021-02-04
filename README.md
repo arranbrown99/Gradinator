@@ -1,4 +1,4 @@
-# gradinator
+# Gradinator
 
 A django web app designed as part of a web app development course. 
 Users can add their enrolled courses and their marks for the coursework that they acheived 
